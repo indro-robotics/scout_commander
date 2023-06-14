@@ -6,6 +6,8 @@
         filename="$(find scout_mini_description)/models/scout_mini/xacro/scout_mini_wheel.xacro" />
     <xacro:include
         filename="$(find scout_mini_description)/models/scout_mini/xacro/scout_mini_gazebo.xacro" />
+    <xacro:include
+        filename="$(find scout_mini_description)/models/commander_slim/xacro/commander_slim.xacro" />
     <!-- Variables -->
     <xacro:property name="M_PI" value="3.14159" />
 

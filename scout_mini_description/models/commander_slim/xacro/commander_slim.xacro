@@ -2,8 +2,6 @@
 <robot name="commander_slim" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
     <xacro:include filename="$(find zed_wrapper)/urdf/zed_macro.urdf.xacro" />
-    <xacro:include
-        filename="$(find scout_mini_description)/models/scout_mini/xacro/scout_mini.xacro" />
     <link name="commander_slim_link">
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />

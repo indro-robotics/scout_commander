@@ -53,9 +53,9 @@ def generate_launch_description():
             ':' + zed_install_dir + '/lib'
 
     xacro_file = os.path.join(
-        pkg_scout_mini_description, 'models/commander_slim/xacro', 'commander_slim.xacro')
+        pkg_scout_mini_description, 'models/scout_mini/xacro', 'scout_mini.xacro')
     assert os.path.exists(
-        xacro_file), "The commander_slim.xacro doesn't exist in " + str(xacro_file)
+        xacro_file), "The scout_mini.xacro doesn't exist in " + str(xacro_file)
 
     robot_description_config = xacro.process_file(xacro_file)
     robot_description = robot_description_config.toxml()
@@ -93,6 +93,14 @@ def generate_launch_description():
         }.items()
     )
 
+    rviz2_node = Node(
+        package='rviz2',
+        executable='rviz2',
+        name='rviz2',
+        arguments=['-d', os.path.join(get_package_share_directory(
+            'scout_mini_control'), 'config', 'nav2_visualization.rviz')]
+    )
+
     spawn_tracer_node = Node(
         package='scout_mini_description',
         executable='spawn_scout_mini',
@@ -103,6 +111,7 @@ def generate_launch_description():
 
     ld.add_action(robot_state_publisher_node)
     ld.add_action(gzserver_launch)
-    #ld.add_action(gzclient_launch)
+    # ld.add_action(gzclient_launch)
     ld.add_action(spawn_tracer_node)
+    ld.add_action(rviz2_node)
     return ld
