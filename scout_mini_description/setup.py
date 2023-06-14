@@ -25,9 +25,6 @@ def package_files(data_files, directory_list):
         data_files.append((key, paths_dict[key]))
     return data_files
 
-
-
-
 setup(
     name=package_name,
     version='0.0.0',
