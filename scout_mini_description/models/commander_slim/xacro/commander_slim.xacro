@@ -24,9 +24,16 @@
         </inertial>
     </link>
     <joint name="commander_slim_joint" type="fixed">
-        <origin xyz="0.0 0.0 0.05" rpy="0 0 0" />
+        <origin xyz="0.0 0.0 0.068" rpy="0 0 0" />
         <parent link="base_link" />
         <child link="commander_slim_link" />
+    </joint>
+    <link name="IMU">
+    </link>
+    <joint name="IMU_joint" type="fixed">
+        <origin xyz="0.12975 0.04175 0.123201" rpy="${pi} 0 ${pi/2}" />
+        <parent link="commander_slim_link" />
+        <child link="IMU" />
     </joint>
 
     <joint name="zed_mount_joint" type="fixed">
