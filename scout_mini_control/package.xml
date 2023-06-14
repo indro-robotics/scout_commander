@@ -7,12 +7,25 @@
   <maintainer email="liamd@indrorobotics.com">liamd</maintainer>
   <license>TODO: License declaration</license>
 
-  <depend>rtabmap_ros</depend>
-  <depend>navigation2</depend>
-  <depend>nav2_bringup</depend>
-  <depend>robot_localization</depend>
-  <depend>slam_toolbox</depend>
 
+  <depend>rclpy</depend>
+
+
+  <!-- Visualization Dependencies -->
+  <exec_depend>xacro</exec_depend>
+  <exec_depend>rviz2</exec_depend>
+  <exec_depend>robot_state_publisher</exec_depend>
+  <exec_depend>gazebo</exec_depend>
+  <exec_depend>gazebo_ros</exec_depend>
+
+  <!-- Navigation Dependencies -->
+  <exec_depend>rtabmap_ros</exec_depend>
+  <exec_depend>robot_localization</exec_depend>
+  <exec_depend>slam_toolbox</exec_depend>
+  <exec_depend>navigation2</exec_depend>
+  <exec_depend>nav2_bringup</exec_depend>
+
+  <!-- Package Dependencies -->
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>
   <test_depend>ament_pep257</test_depend>
