@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<robot name="commander_slim" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <xacro:include filename="$(find zed_wrapper)/urdf/zed_macro.urdf.xacro" />
+    <xacro:include
+        filename="$(find scout_mini_description)/models/scout_mini/xacro/scout_mini.xacro" />
+    <link name="commander_slim_link">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh
+                    filename="package://scout_mini_description/models/commander_slim/meshes/CommanderSlim.dae" />
+            </geometry>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh
+                    filename="package://scout_mini_description/models/commander_slim/meshes/CommanderSlim.dae" />
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="10.0" />
+            <origin xyz="0.050 0.00 -0.075" />
+            <inertia ixx="0.13852" ixy="0.0" ixz="0.0" iyy="0.2961" iyz="0.0" izz="0.3426" />
+        </inertial>
+    </link>
+    <joint name="commander_slim_joint" type="fixed">
+        <origin xyz="0.0 0.0 0.05" rpy="0 0 0" />
+        <parent link="base_link" />
+        <child link="commander_slim_link" />
+    </joint>
+
+    <joint name="zed_mount_joint" type="fixed">
+        <origin xyz="0.277812 0 0.108212" rpy="0 0 0" />
+        <parent link="commander_slim_link" />
+        <child link="zed_mount_link" />
+    </joint>
+    <link name="zed_mount_link" />
+    <xacro:zed_camera name="zed2i" model="zed2i" parent="zed_mount_link">
+      <origin xyz="0 0 0" rpy="0 0 0" />
+    </xacro:zed_camera>
+
+</robot>
