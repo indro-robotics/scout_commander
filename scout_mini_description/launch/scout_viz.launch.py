@@ -60,10 +60,19 @@ def generate_launch_description():
         pkg_scout_mini_description, 'models/scout_mini/xacro', 'scout_mini.xacro')
     assert os.path.exists(
         xacro_file), "The scout_mini.xacro doesn't exist in " + str(xacro_file)
+    
+    xacro_file_viz = os.path.join(
+        pkg_scout_mini_description, 'models/scout_mini/xacro', 'scout_mini_viz.xacro')
+    assert os.path.exists(
+        xacro_file), "The scout_mini_viz.xacro doesn't exist in " + str(xacro_file)
 
     robot_description_config = xacro.process_file(xacro_file)
     robot_description = robot_description_config.toxml()
     robot_description_param = {'robot_description': robot_description}
+
+    robot_description_viz_config = xacro.process_file(xacro_file_viz)
+    robot_description_viz = robot_description_viz_config.toxml()
+    robot_description_viz_param = {'robot_description': robot_description_viz}
 
     robot_state_publisher_node = Node(
         package='robot_state_publisher',
@@ -71,6 +80,15 @@ def generate_launch_description():
         name='robot_state_publisher',
         namespace='scout_mini',
         parameters=[robot_description_param],
+        condition=UnlessCondition(visualize)
+    )
+    robot_state_publisher_viz_node = Node(
+        package='robot_state_publisher',
+        executable='robot_state_publisher',
+        name='robot_state_publisher',
+        namespace='scout_mini',
+        parameters=[robot_description_viz_param],
+        condition=IfCondition(visualize)
     )
 
     gzserver_launch = IncludeLaunchDescription(

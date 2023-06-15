@@ -58,9 +58,23 @@ def generate_launch_description():
             'cam_pose' : '0.277812 0 0.176212 0 0 0'
         }
     )
+
+    IMU_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([
+            PathJoinSubstitution([
+                FindPackageShare('microstrain_inertial_driver'), 
+                'launch', 'microstrain_launch.py'
+            ])
+        ]),
+        launch_arguments={
+            'namespace' : 'scout_mini'
+        }
+    )
+
     ld.add_action(slam_params_file)
     #ld.add_action(slam_toolbox_launch)
     ld.add_action(sim_time_argument)
     ld.add_action(robot_localization_node)
+    ld.add_action(IMU_launch)
 
     return ld

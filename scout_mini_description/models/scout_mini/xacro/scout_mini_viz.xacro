@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<robot name="zed_cameras" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <xacro:include filename="$(find zed_wrapper)/urdf/zed_macro.urdf.xacro" />
+    <xacro:include filename="$(find scout_mini_description)/models/scout_mini/xacro/scout_mini.xacro" />
+    <joint name="zed_mount_joint" type="fixed">
+        <origin xyz="0.277812 0 0.108212" rpy="0 0 0" />
+        <parent link="commander_slim_link" />
+        <child link="zed_mount_link" />
+    </joint>
+    <link name="zed_mount_link" />
+    <xacro:zed_camera name="zed2" model="zed2" parent="zed_mount_link">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+    </xacro:zed_camera>
+</robot>
