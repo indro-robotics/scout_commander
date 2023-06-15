@@ -34,7 +34,6 @@ def generate_launch_description():
     pkg_scout_mini_description = get_package_share_directory(
         'scout_mini_description')
     scout_install_dir = get_package_prefix('scout_mini_description')
-    zed_install_dir = get_package_prefix('zed_interfaces')
 
     visualize_arg = DeclareLaunchArgument('visualize', default_value='True', description='Launching the visualization components of the simulation')
     visualize = LaunchConfiguration('visualize')
@@ -43,18 +42,14 @@ def generate_launch_description():
     # Gazebo environment sourcing
     if 'GAZEBO_MODEL_PATH' in os.environ:
         os.environ['GAZEBO_MODEL_PATH'] = os.environ['GAZEBO_MODEL_PATH'] + \
-            ':' + scout_install_dir + '/share' + \
-            ':' + zed_install_dir + '/share'
+            ':' + scout_install_dir + '/share'
     else:
-        os.environ['GAZEBO_MODEL_PATH'] = scout_install_dir + "/share" + \
-            ':' + zed_install_dir + '/share'
+        os.environ['GAZEBO_MODEL_PATH'] = scout_install_dir + "/share"
     if 'GAZEBO_PLUGIN_PATH' in os.environ:
         os.environ['GAZEBO_PLUGIN_PATH'] = os.environ['GAZEBO_PLUGIN_PATH'] + \
-            ':' + scout_install_dir + '/lib' + \
-            ':' + zed_install_dir + '/lib'
+            ':' + scout_install_dir + '/lib'
     else:
-        os.environ['GAZEBO_PLUGIN_PATH'] = scout_install_dir + '/lib' + \
-            ':' + zed_install_dir + '/lib'
+        os.environ['GAZEBO_PLUGIN_PATH'] = scout_install_dir + '/lib'
 
     xacro_file = os.path.join(
         pkg_scout_mini_description, 'models/scout_mini/xacro', 'scout_mini.xacro')
@@ -64,11 +59,7 @@ def generate_launch_description():
     xacro_file_viz = os.path.join(
         pkg_scout_mini_description, 'models/scout_mini/xacro', 'scout_mini_viz.xacro')
     assert os.path.exists(
-        xacro_file), "The scout_mini_viz.xacro doesn't exist in " + str(xacro_file)
-
-    robot_description_config = xacro.process_file(xacro_file)
-    robot_description = robot_description_config.toxml()
-    robot_description_param = {'robot_description': robot_description}
+        xacro_file_viz), "The scout_mini_viz.xacro doesn't exist in " + str(xacro_file_viz)
 
     robot_description_viz_config = xacro.process_file(xacro_file_viz)
     robot_description_viz = robot_description_viz_config.toxml()
@@ -79,17 +70,10 @@ def generate_launch_description():
         executable='robot_state_publisher',
         name='robot_state_publisher',
         namespace='scout_mini',
-        parameters=[robot_description_param],
-        condition=UnlessCondition(visualize)
-    )
-    robot_state_publisher_viz_node = Node(
-        package='robot_state_publisher',
-        executable='robot_state_publisher',
-        name='robot_state_publisher',
-        namespace='scout_mini',
         parameters=[robot_description_viz_param],
-        condition=IfCondition(visualize)
+        #condition=UnlessCondition(visualize)
     )
+
 
     gzserver_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([
@@ -128,9 +112,10 @@ def generate_launch_description():
 
     #Launching robot tf broadcaster
     ld.add_action(robot_state_publisher_node)
+    # ld.add_action()
 
     #Launching visualization
-    ld.add_action(gzserver_launch)
-    ld.add_action(spawn_tracer_node)
+    #ld.add_action(gzserver_launch)
+    #ld.add_action(spawn_tracer_node)
     ld.add_action(rviz2_node)
     return ld
