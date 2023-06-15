@@ -39,8 +39,6 @@ def generate_launch_description():
         pkg_scout_mini_description, 'models/scout_mini/xacro', 'scout_mini_viz.xacro')
     assert os.path.exists(
         xacro_file), "The scout_mini_viz.xacro doesn't exist in " + str(xacro_file)
-    
-
 
     robot_description_config = xacro.process_file(xacro_file)
     robot_description = robot_description_config.toxml()
