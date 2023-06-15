@@ -61,9 +61,14 @@
         <child link="inertial_link" />
     </joint>
 
+    <link name="base_footprint" />
+    <joint name="base_footprint_joint" type="fixed">
+        <origin xyz="0 0 -0.16" />
+        <parent link="base_link"/>
+        <child link="base_footprint"/>
+    </joint>
+
     <!-- Scout wheel macros -->
-    <!-- wheel labeled from 0 to 3, conter-clockwise, starting from front right wheel -->
-    <!-- motor 1 and 2 (left side) are mechanically installed in a reversed direction -->
     <xacro:scout_mini_wheel wheel_prefix="front_right" >
         <origin xyz= "0 0 0" rpy="1.57 0 0" />
         <origin xyz="${wheelbase/2} ${-track/2} ${wheel_vertical_offset}" rpy="0 0 0" />
@@ -101,8 +106,4 @@
         <parent link="base_link" />
         <child link="rear_mount" />
     </joint>
-
-
-    <!-- Gazebo definitions  -->
-    <!-- <xacro:include filename="$(find scout_description)/urdf/scout_mini.gazebo" /> -->
 </robot>

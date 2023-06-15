@@ -36,6 +36,10 @@ def generate_launch_description():
     scout_install_dir = get_package_prefix('scout_mini_description')
     zed_install_dir = get_package_prefix('zed_interfaces')
 
+    visualize_arg = DeclareLaunchArgument('visualize', default_value='True', description='Launching the visualization components of the simulation')
+    visualize = LaunchConfiguration('visualize')
+
+
     # Gazebo environment sourcing
     if 'GAZEBO_MODEL_PATH' in os.environ:
         os.environ['GAZEBO_MODEL_PATH'] = os.environ['GAZEBO_MODEL_PATH'] + \
@@ -79,18 +83,8 @@ def generate_launch_description():
         launch_arguments={
             'verbose': 'true',
             # 'world': TextSubstitution(text=str(gazebo_world))
-        }.items()
-    )
-    gzclient_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([
-            PathJoinSubstitution([
-                FindPackageShare('gazebo_ros'),
-                'launch', 'gzclient.launch.py'
-            ])
-        ]),
-        launch_arguments={
-            'verbose': 'false',
-        }.items()
+        }.items(),
+        condition=IfCondition(visualize)
     )
 
     rviz2_node = Node(
@@ -98,7 +92,8 @@ def generate_launch_description():
         executable='rviz2',
         name='rviz2',
         arguments=['-d', os.path.join(get_package_share_directory(
-            'scout_mini_control'), 'config', 'nav2_visualization.rviz')]
+            'scout_mini_control'), 'config', 'nav2_visualization.rviz')],
+        condition=IfCondition(visualize)
     )
 
     spawn_tracer_node = Node(
@@ -107,11 +102,17 @@ def generate_launch_description():
         namespace='/scout_mini',
         arguments=[robot_description],
         output='screen',
+        condition=IfCondition(visualize)
     )
 
+    # Adding arguments
+    ld.add_action(visualize_arg)
+
+    #Launching robot tf broadcaster
     ld.add_action(robot_state_publisher_node)
+
+    #Launching visualization
     ld.add_action(gzserver_launch)
-    # ld.add_action(gzclient_launch)
     ld.add_action(spawn_tracer_node)
     ld.add_action(rviz2_node)
     return ld
