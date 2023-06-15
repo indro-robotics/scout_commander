@@ -10,7 +10,6 @@
             </inertial>
             <visual>
                 <xacro:insert_block name="visual_origin" />
-                <!-- <origin xyz="0 0 0" rpy="0 0 ${rotation}" /> -->
                 <geometry>
                     <mesh
                         filename="package://scout_mini_description/models/scout_mini/meshes/wheel.dae" />
@@ -18,9 +17,6 @@
             </visual>
             <collision>
                 <xacro:insert_block name="visual_origin" />
-                <!-- <origin
-                    xyz="0 0 0"
-                    rpy="0 0 ${rotation}" /> -->
                 <geometry>
                     <mesh
                         filename="package://scout_mini_description/models/scout_mini/meshes/wheel.dae" />
@@ -28,8 +24,7 @@
             </collision>
         </link>
 
-        <joint name="${wheel_prefix}_wheel" type="continuous"> <!-- MAKE SURE TO SET THIS BACK TO
-            CONTINUOUS ONCE THE JOINTS ARE PUBLISHED -->
+        <joint name="${wheel_prefix}_wheel" type="continuous">
             <parent link="base_link" />
             <child link="${wheel_prefix}_wheel_link" />
             <xacro:insert_block name="joint_pose" />
