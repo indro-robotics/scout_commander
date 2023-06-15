@@ -3,12 +3,15 @@
 import os
 import xacro
 
-from launch import LaunchDescription
-from launch_ros.actions import Node
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
 from ament_index_python.packages import get_package_share_directory
-from launch.substitutions import LaunchConfiguration
+from launch import LaunchDescription
+from launch.actions import IncludeLaunchDescription, DeclareLaunchArgument
 from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.substitutions import PathJoinSubstitution, TextSubstitution
+from launch_ros.actions import Node
+from launch_ros.substitutions import FindPackageShare
+from launch.conditions import IfCondition, UnlessCondition
+from launch.substitutions import LaunchConfiguration
 
 
 def generate_launch_description():
@@ -32,6 +35,7 @@ def generate_launch_description():
         executable='ekf_node',
         name='ekf_filter_node',
         output='screen',
+        namespace='scout_mini',
         parameters=[ekf_config, {
             'use_sim_time': LaunchConfiguration('use_sim_time')}]
     )
@@ -41,8 +45,21 @@ def generate_launch_description():
             [slam_toolbox_pkg, '/launch/online_async_launch.py']),
     )
 
+    zed2_camera_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([
+            PathJoinSubstitution([
+                FindPackageShare('zed_wrapper'), 
+                'launch', 'zed2.launch.py'
+            ])
+        ]),
+        launch_arguments={
+            'publish_tf' : 'false',
+            'camera_name' : 'scout_mini',
+            'cam_pose' : '0.277812 0 0.176212 0 0 0'
+        }
+    )
     ld.add_action(slam_params_file)
-    ld.add_action(slam_toolbox_launch)
+    #ld.add_action(slam_toolbox_launch)
     ld.add_action(sim_time_argument)
     ld.add_action(robot_localization_node)
 

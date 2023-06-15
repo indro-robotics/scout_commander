@@ -42,7 +42,7 @@
         <child link="zed_mount_link" />
     </joint>
     <link name="zed_mount_link" />
-    <xacro:zed_camera name="zed2i" model="zed2i" parent="zed_mount_link">
+    <xacro:zed_camera name="zed2" model="zed2" parent="zed_mount_link">
       <origin xyz="0 0 0" rpy="0 0 0" />
     </xacro:zed_camera>
 
