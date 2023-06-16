@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro" name="scout_wheel">
 
-    <xacro:macro name="scout_mini_wheel" params="wheel_prefix *visual_origin *joint_pose">
+    <xacro:macro name="scout_mini_wheel" params="wheel_prefix joint_type *visual_origin *joint_pose">
         <link name="${wheel_prefix}_wheel_link">
             <inertial>
                 <mass value="3" />
@@ -24,7 +24,7 @@
             </collision>
         </link>
 
-        <joint name="${wheel_prefix}_wheel" type="fixed">
+        <joint name="${wheel_prefix}_wheel" type="${joint_type}">
             <parent link="base_link" />
             <child link="${wheel_prefix}_wheel_link" />
             <xacro:insert_block name="joint_pose" />

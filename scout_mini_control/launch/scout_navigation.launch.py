@@ -16,14 +16,33 @@ from launch.substitutions import LaunchConfiguration
 
 def generate_launch_description():
 
-    scout_mini_control_pkg = get_package_share_directory(
-        'scout_mini_control')
-    ekf_config = os.path.join(scout_mini_control_pkg, 'config/ekf.yaml')
     ld = LaunchDescription()
 
-    # sim_time_argument = DeclareLaunchArgument(name='use_sim_time', default_value='True',
-    #                                           description='Flag to enable use_sim_time')
+    scout_mini_control_pkg = get_package_share_directory(
+        'scout_mini_control')
+    scout_mini_description_pkg = get_package_share_directory(
+        'scout_mini_description')
 
+    ekf_config = os.path.join(scout_mini_control_pkg, 'config/ekf.yaml')
+
+    # Robot Description File
+    xacro_file = os.path.join(
+        scout_mini_description_pkg, 'models/scout_mini/xacro', 'scout_mini_tf.xacro')
+    assert os.path.exists(
+        xacro_file), "The scout_mini_tf.xacro doesn't exist in " + str(xacro_file)
+
+    robot_description_config = xacro.process_file(xacro_file)
+    robot_description = robot_description_config.toxml()
+    robot_description_param = {'robot_description': robot_description}
+
+    robot_state_publisher_node = Node(
+        package='robot_state_publisher',
+        executable='robot_state_publisher',
+        name='robot_state_publisher',
+        namespace='/scout_mini',
+        parameters=[robot_description_param],
+    )
+    
     robot_localization_node = Node(
         package='robot_localization',
         executable='ekf_node',
@@ -33,8 +52,26 @@ def generate_launch_description():
         parameters=[ekf_config]
     )
 
+    IMU_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([
+            PathJoinSubstitution([
+                FindPackageShare('microstrain_inertial_driver'),
+                'launch', 'microstrain_launch.py',
+            ])
+        ]),
+        launch_arguments={
+            'namespace': 'scout_mini',
+        }.items(),
+    )
 
-    # ld.add_action(sim_time_argument)
+
+    # Navigation Nodes
     ld.add_action(robot_localization_node)
+
+    # Robot TF Launch
+    ld.add_action(robot_state_publisher_node)
+
+    # Sensor launch
+    ld.add_action(IMU_launch)
 
     return ld

@@ -8,7 +8,10 @@
     <xacro:include
         filename="$(find scout_mini_description)/models/commander_slim/xacro/commander_slim.xacro" />
 
-       <xacro:property name="M_PI" value="3.14159" />
+    <xacro:include
+        filename="$(find scout_mini_description)/models/scout_mini/xacro/scout_mini_gazebo.xacro" />
+    
+    <xacro:property name="M_PI" value="3.14159" />
 
     <!-- Vehicle Geometries -->
     <xacro:property name="base_x_size" value="0.6200000" />
@@ -60,11 +63,35 @@
         <child link="inertial_link" />
     </joint>
 
+
+        <!-- Scout wheel macros -->
+    <xacro:scout_mini_wheel wheel_prefix="front_right" joint_type="continuous" >
+        <origin xyz= "0 0 0" rpy="1.57 0 0" />
+        <origin xyz="${wheelbase/2} ${-track/2} ${wheel_vertical_offset}" rpy="0 0 0" />
+    </xacro:scout_mini_wheel>
+
+    <xacro:scout_mini_wheel wheel_prefix="front_left" joint_type="continuous" >
+        <origin xyz= "0 0 0" rpy="-1.57 0 0" />
+        <origin xyz="${wheelbase/2} ${track/2} ${wheel_vertical_offset}" rpy="0 0 0" />
+    </xacro:scout_mini_wheel>
+
+    <xacro:scout_mini_wheel wheel_prefix="rear_left" joint_type="continuous" >
+        <origin xyz= "0 0 0" rpy="-1.57 0 0" />
+        <origin xyz="${-wheelbase/2} ${track/2} ${wheel_vertical_offset}" rpy="0 0 0" />
+    </xacro:scout_mini_wheel>
+
+    <xacro:scout_mini_wheel wheel_prefix="rear_right" joint_type="continuous" >
+        <origin xyz= "0 0 0" rpy="1.57 0 0" />
+        <origin xyz="${-wheelbase/2} ${-track/2} ${wheel_vertical_offset}" rpy="0 0 0" />
+    </xacro:scout_mini_wheel>
+
+    <xacro:diff_drive_plugin />
+
     <link name="base_footprint" />
     <joint name="base_footprint_joint" type="fixed">
         <origin xyz="0 0 -0.16" />
-        <parent link="base_link"/>
-        <child link="base_footprint"/>
+        <parent link="base_footprint"/>
+        <child link="base_link"/>
     </joint>
     <link name="front_mount" />
 
