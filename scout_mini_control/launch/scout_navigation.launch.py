@@ -21,8 +21,8 @@ def generate_launch_description():
     ekf_config = os.path.join(scout_mini_control_pkg, 'config/ekf.yaml')
     ld = LaunchDescription()
 
-    sim_time_argument = DeclareLaunchArgument(name='use_sim_time', default_value='True',
-                                              description='Flag to enable use_sim_time')
+    # sim_time_argument = DeclareLaunchArgument(name='use_sim_time', default_value='True',
+    #                                           description='Flag to enable use_sim_time')
 
     robot_localization_node = Node(
         package='robot_localization',
@@ -30,12 +30,11 @@ def generate_launch_description():
         name='ekf_filter_node',
         output='screen',
         namespace='/scout_mini',
-        parameters=[ekf_config, {
-            'use_sim_time': LaunchConfiguration('use_sim_time')}]
+        parameters=[ekf_config]
     )
 
 
-    ld.add_action(sim_time_argument)
+    # ld.add_action(sim_time_argument)
     ld.add_action(robot_localization_node)
 
     return ld
