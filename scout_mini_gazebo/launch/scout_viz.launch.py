@@ -31,33 +31,47 @@ def generate_launch_description():
 
     ld = LaunchDescription()
 
-    pkg_scout_mini_description = get_package_share_directory(
+    sim_time_argument = DeclareLaunchArgument(name='use_sim_time', default_value='True',
+                                              description='Flag to enable use_sim_time')
+
+    scout_description_install_dir = get_package_prefix(
         'scout_mini_description')
-    scout_description_install_dir = get_package_prefix('scout_mini_description')
+    scout_gazebo_install_dir = get_package_prefix('scout_mini_gazebo')
+    zed_wrapper_install_dir = get_package_prefix('zed_wrapper')
+
+    scout_description_share_dir = get_package_share_directory(
+        'scout_mini_description')
+    scout_gazebo_share_dir = get_package_share_directory('scout_mini_gazebo')
 
     # Gazebo environment sourcing
     if 'GAZEBO_MODEL_PATH' in os.environ:
         os.environ['GAZEBO_MODEL_PATH'] = os.environ['GAZEBO_MODEL_PATH'] + \
             ':' + scout_description_install_dir + '/share' + \
-            ':' + zed_description_install_dir + '/share'
+            ':' + zed_wrapper_install_dir + '/share' + \
+            ':' + scout_gazebo_install_dir + '/share'
     else:
-        os.environ['GAZEBO_MODEL_PATH'] = scout_install_dir + "/share"
+        os.environ['GAZEBO_MODEL_PATH'] = scout_description_install_dir + "/share" + \
+            ':' + zed_wrapper_install_dir + '/share' + \
+            ':' + scout_gazebo_install_dir + '/share'
     if 'GAZEBO_PLUGIN_PATH' in os.environ:
         os.environ['GAZEBO_PLUGIN_PATH'] = os.environ['GAZEBO_PLUGIN_PATH'] + \
-            ':' + scout_install_dir + '/lib'
+            ':' + scout_description_install_dir + '/lib' + \
+            ':' + zed_wrapper_install_dir + '/lib' + \
+            ':' + scout_gazebo_install_dir + '/lib'
     else:
-        os.environ['GAZEBO_PLUGIN_PATH'] = scout_install_dir + '/lib'
+        os.environ['GAZEBO_PLUGIN_PATH'] = scout_description_install_dir + '/lib' + \
+            ':' + zed_wrapper_install_dir + '/lib' + \
+            ':' + scout_gazebo_install_dir
 
-    
     # Robot Description XACRO
-    xacro_file_viz = os.path.join(
-        pkg_scout_mini_description, 'models/scout_mini/xacro', 'scout_mini_viz.xacro')
+    xacro_file = os.path.join(
+        scout_gazebo_share_dir, 'models/scout_mini/xacro', 'scout_mini.xacro')
     assert os.path.exists(
-        xacro_file_viz), "The scout_mini_viz.xacro doesn't exist in " + str(xacro_file_viz)
+        xacro_file), "The scout_mini.xacro doesn't exist in " + str(xacro_file)
 
-    robot_description_viz_config = xacro.process_file(xacro_file_viz)
-    robot_description_viz = robot_description_viz_config.toxml()
-    robot_description_viz_param = {'robot_description': robot_description_viz}
+    robot_description_config = xacro.process_file(xacro_file)
+    robot_description = robot_description_config.toxml()
+    robot_description_param = {'robot_description': robot_description}
 
     # Declaring Nodes
 
@@ -66,7 +80,7 @@ def generate_launch_description():
         executable='robot_state_publisher',
         name='robot_state_publisher',
         namespace='scout_mini',
-        parameters=[robot_description_viz_param],
+        parameters=[robot_description_param],
     )
 
     gzserver_launch = IncludeLaunchDescription(
@@ -96,16 +110,34 @@ def generate_launch_description():
         arguments=[robot_description],
         output='screen',
     )
+    scout_mini_control_pkg = get_package_share_directory('scout_mini_control')
+
+    ekf_config = os.path.join(scout_mini_control_pkg, 'config/ekf.yaml')
+    sim_time_argument = DeclareLaunchArgument(name='use_sim_time', default_value='True',
+                                              description='Flag to enable use_sim_time')
+
+    robot_localization_node = Node(
+        package='robot_localization',
+        executable='ekf_node',
+        name='ekf_filter_node',
+        output='screen',
+        namespace='/scout_mini',
+        parameters=[ekf_config, {
+            'use_sim_time': LaunchConfiguration('use_sim_time')}]
+    )
 
     # Adding arguments
-    ld.add_action(visualize_arg)
+    ld.add_action(sim_time_argument)
+
+    # Navigation Nodes
+    ld.add_action(robot_localization_node)
 
     # Launching robot TF broadcaster
     ld.add_action(robot_state_publisher_node)
 
-    #Launching visualization
+    # Launching visualization
     ld.add_action(gzserver_launch)
     ld.add_action(spawn_tracer_node)
     ld.add_action(rviz2_node)
-    
+
     return ld

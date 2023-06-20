@@ -25,6 +25,9 @@ def generate_launch_description():
 
     ekf_config = os.path.join(scout_mini_control_pkg, 'config/ekf.yaml')
 
+    sim_time_argument = DeclareLaunchArgument(name='use_sim_time', default_value='True',
+                                              description='Flag to enable use_sim_time')
+
     # Robot Description File
     xacro_file = os.path.join(
         scout_mini_description_pkg, 'models/scout_mini/xacro', 'scout_mini_tf.xacro')
@@ -64,7 +67,9 @@ def generate_launch_description():
         }.items(),
     )
 
+    # Adding arguments
 
+    ld.add_action(sim_time_argument)
     # Navigation Nodes
     ld.add_action(robot_localization_node)
 

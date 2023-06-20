@@ -3,7 +3,7 @@
 <robot name="scout_mini_sensors" xmlns:xacro="http://wiki.ros.org/xacro">
     <xacro:include filename="$(find zed_wrapper)/urdf/zed_macro.urdf.xacro" />
 
-    <xacro:macro name="zed_cameras">
+    <xacro:macro name="depth_camera">
         <joint name="zed_mount_joint" type="fixed">
             <origin xyz="0.277812 0 0.108212" rpy="0 0 0" />
             <parent link="commander_slim_link" />
@@ -11,12 +11,186 @@
         </joint>
         <link name="zed_mount_link" />
 
-        <xacro:zed_camera name="zed2" model="zed2" parents="zed_mount_link">
+        <xacro:zed_camera name="zed2" model="zed2" parent="zed_mount_link">
             <origin xyz="0 0 0" rpy="0 0 0" />
         </xacro:zed_camera>
-        <link name="zed_depth_link_optical" />
-        <joint name="zed_depth_joint_
-    </xacro:macro>
 
+        <link name="zed_depth_link_optical" />
+        <joint name="zed_depth_join_optical" type="fixed">
+            <parent link="zed_mount_link" />
+            <child link="zed_depth_link_optical" />
+            <origin xyz="0 0 0" rpy="${-pi/2} 0 ${-pi/2}" />
+        </joint>
+        <gazebo reference="zed_mount_link">
+            <sensor type="depth" name="zed_depth_camera">
+                <visualize>false</visualize>
+                <update_rate>10.0</update_rate>
+                <always_on>true</always_on>
+                <pose>0 0 0 0 0 0</pose>
+                <camera name="zed_depth_camera">
+                    <horizontal_fov>1.91986</horizontal_fov>
+                    <vertical_fov>1.22173</vertical_fov>
+                    <image>
+                        <width>1344</width>
+                        <height>376</height>
+                        <format>B8G8R8</format>
+                    </image>
+                    <clip>
+                        <near>0.2</near>
+                        <far>20</far>
+                    </clip>
+                </camera>
+                <plugin name="zed_camera_depth_controller" filename="libgazebo_ros_camera.so">
+                    <ros>
+                        <namespace>${robot_namespace}</namespace>
+                        <!-- Remappings for the ZED Camera Nodes -->
+                    </ros>
+                    <frame_name>zed_depth_link_optical</frame_name>
+                    <cameraName>zed_depth_camera</cameraName>
+                    <hack_baseline>0.07</hack_baseline>
+                    <min_depth>0.2</min_depth>
+                    <max_depth>20</max_depth>
+                </plugin>
+            </sensor>
+            <sensor name="ZED_IMU_sensor" type="imu">
+                <plugin filename="libgazebo_ros_imu_sensor.so" name="ZED_IMU_plugin">
+                    <ros>
+                        <namespace>${robot_namespace}</namespace>
+                        <remapping>~/out:=zed_node/imu/data</remapping>
+                    </ros>
+                    <initial_orientation_as_reference>false</initial_orientation_as_reference>
+
+                </plugin>
+                <always_on>true</always_on>
+                <update_rate>100</update_rate>
+                <visualize>true</visualize>
+                <!-- <imu>
+                    <angular_velocity>
+                        <x>
+                            <noise type="gaussian">
+                                <mean>0.0</mean>
+                                <stddev>2e-4</stddev>
+                                <bias_mean>0.0000075</bias_mean>
+                                <bias_stddev>0.0000008</bias_stddev>
+                            </noise>
+                        </x>
+                        <y>
+                            <noise type="gaussian">
+                                <mean>0.0</mean>
+                                <stddev>2e-4</stddev>
+                                <bias_mean>0.0000075</bias_mean>
+                                <bias_stddev>0.0000008</bias_stddev>
+                            </noise>
+                        </y>
+                        <z>
+                            <noise type="gaussian">
+                                <mean>0.0</mean>
+                                <stddev>2e-4</stddev>
+                                <bias_mean>0.0000075</bias_mean>
+                                <bias_stddev>0.0000008</bias_stddev>
+                            </noise>
+                        </z>
+                    </angular_velocity>
+                    <linear_acceleration>
+                        <x>
+                            <noise type="gaussian">
+                                <mean>0.0</mean>
+                                <stddev>1.7e-2</stddev>
+                                <bias_mean>0.1</bias_mean>
+                                <bias_stddev>0.001</bias_stddev>
+                            </noise>
+                        </x>
+                        <y>
+                            <noise type="gaussian">
+                                <mean>0.0</mean>
+                                <stddev>1.7e-2</stddev>
+                                <bias_mean>0.1</bias_mean>
+                                <bias_stddev>0.001</bias_stddev>
+                            </noise>
+                        </y>
+                        <z>
+                            <noise type="gaussian">
+                                <mean>0.0</mean>
+                                <stddev>1.7e-2</stddev>
+                                <bias_mean>0.1</bias_mean>
+                                <bias_stddev>0.001</bias_stddev>
+                            </noise>
+                        </z>
+                    </linear_acceleration>
+                </imu> -->
+            </sensor>
+        </gazebo>
+    </xacro:macro>
+    <xacro:macro name="IMU">
+        <gazebo reference="IMU">
+            <sensor name="IMU_sensor" type="imu">
+                <plugin filename="libgazebo_ros_imu_sensor.so" name="IMU_plugin">
+                    <ros>
+                        <namespace>${robot_namespace}</namespace>
+                        <remapping>~/out:=imu/data</remapping>
+                    </ros>
+                    <initial_orientation_as_reference>false</initial_orientation_as_reference>
+
+                </plugin>
+                <always_on>true</always_on>
+                <update_rate>100</update_rate>
+                <visualize>true</visualize>
+                <imu>
+                    <angular_velocity>
+                        <x>
+                            <noise type="gaussian">
+                                <mean>0.0</mean>
+                                <stddev>2e-4</stddev>
+                                <bias_mean>0.0000075</bias_mean>
+                                <bias_stddev>0.0000008</bias_stddev>
+                            </noise>
+                        </x>
+                        <y>
+                            <noise type="gaussian">
+                                <mean>0.0</mean>
+                                <stddev>2e-4</stddev>
+                                <bias_mean>0.0000075</bias_mean>
+                                <bias_stddev>0.0000008</bias_stddev>
+                            </noise>
+                        </y>
+                        <z>
+                            <noise type="gaussian">
+                                <mean>0.0</mean>
+                                <stddev>2e-4</stddev>
+                                <bias_mean>0.0000075</bias_mean>
+                                <bias_stddev>0.0000008</bias_stddev>
+                            </noise>
+                        </z>
+                    </angular_velocity>
+                    <linear_acceleration>
+                        <x>
+                            <noise type="gaussian">
+                                <mean>0.0</mean>
+                                <stddev>1.7e-2</stddev>
+                                <bias_mean>0.1</bias_mean>
+                                <bias_stddev>0.001</bias_stddev>
+                            </noise>
+                        </x>
+                        <y>
+                            <noise type="gaussian">
+                                <mean>0.0</mean>
+                                <stddev>1.7e-2</stddev>
+                                <bias_mean>0.1</bias_mean>
+                                <bias_stddev>0.001</bias_stddev>
+                            </noise>
+                        </y>
+                        <z>
+                            <noise type="gaussian">
+                                <mean>0.0</mean>
+                                <stddev>1.7e-2</stddev>
+                                <bias_mean>0.1</bias_mean>
+                                <bias_stddev>0.001</bias_stddev>
+                            </noise>
+                        </z>
+                    </linear_acceleration>
+                </imu>
+            </sensor>
+        </gazebo>
+    </xacro:macro>
 
 </robot>

@@ -6,6 +6,7 @@
             <plugin name="gazebo_ros_diff_drive" filename="libgazebo_ros_diff_drive.so">
                 <ros>
                     <namespace>${robot_namespace}</namespace>
+                    <remapping>odom:=zed_node/odom</remapping>
                 </ros>
                 <!-- Update rate in Hz -->
                 <update_rate>50</update_rate>
@@ -27,14 +28,13 @@
                 <!-- input -->
                 <command_topic>cmd_vel</command_topic>
                 <!-- output -->
-                <publish_odom>false</publish_odom>
+                <publish_odom>true</publish_odom>
                 <publish_odom_tf>false</publish_odom_tf>
                 <publish_wheel_tf>true</publish_wheel_tf>
-                <odometry_topic>odom</odometry_topic>
+                <odometry_topic>zed_node/odom</odometry_topic>
                 <odometry_frame>odom</odometry_frame>
-                <robot_base_frame>base_link</robot_base_frame>
+                <robot_base_frame>base_footprint</robot_base_frame>
             </plugin>
         </gazebo>
     </xacro:macro>
-
 </robot>
