@@ -30,7 +30,7 @@ setup(
     name=package_name,
     version='0.0.0',
     packages=[package_name],
-    data_files=package_files(data_files, ['launch/', 'models/', 'config/']),
+    data_files=package_files(data_files, ['launch/', 'models/', 'config/', 'worlds/']),
     install_requires=['setuptools'],
     zip_safe=True,
     maintainer='liamd',

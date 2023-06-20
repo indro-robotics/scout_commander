@@ -12,6 +12,8 @@ from launch.substitutions import LaunchConfiguration
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 import xacro
 
+from launch.substitutions import PathJoinSubstitution, TextSubstitution
+
 
 from launch_ros.substitutions import FindPackageShare
 
@@ -39,11 +41,17 @@ def generate_launch_description():
     scout_gazebo_install_dir = get_package_prefix('scout_mini_gazebo')
     zed_wrapper_install_dir = get_package_prefix('zed_wrapper')
 
+    
+
     scout_description_share_dir = get_package_share_directory(
         'scout_mini_description')
     scout_gazebo_share_dir = get_package_share_directory('scout_mini_gazebo')
+    scout_control_share_dir = get_package_share_directory('scout_mini_control')
+
 
     # Gazebo environment sourcing
+    gazebo_world = os.path.join(
+        scout_gazebo_share_dir, 'worlds', 'obstacle_simulation.sdf')
     if 'GAZEBO_MODEL_PATH' in os.environ:
         os.environ['GAZEBO_MODEL_PATH'] = os.environ['GAZEBO_MODEL_PATH'] + \
             ':' + scout_description_install_dir + '/share' + \
@@ -92,7 +100,20 @@ def generate_launch_description():
         ]),
         launch_arguments={
             'verbose': 'true',
+            'world': TextSubstitution(text=str(gazebo_world))
         }.items(),
+    )
+
+    gzclient_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([
+            PathJoinSubstitution([
+                FindPackageShare('gazebo_ros'),
+                'launch', 'gzclient.launch.py'
+            ])
+        ]),
+        launch_arguments={
+            'verbose': 'false',
+        }.items()
     )
 
     rviz2_node = Node(
@@ -137,6 +158,7 @@ def generate_launch_description():
 
     # Launching visualization
     ld.add_action(gzserver_launch)
+    ld.add_action(gzclient_launch)
     ld.add_action(spawn_tracer_node)
     ld.add_action(rviz2_node)
 

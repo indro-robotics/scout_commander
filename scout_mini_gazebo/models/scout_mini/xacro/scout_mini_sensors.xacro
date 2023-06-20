@@ -16,12 +16,12 @@
         </xacro:zed_camera>
 
         <link name="zed_depth_link_optical" />
-        <joint name="zed_depth_join_optical" type="fixed">
+        <joint name="zed_depth_joint_optical" type="fixed">
             <parent link="zed_mount_link" />
             <child link="zed_depth_link_optical" />
             <origin xyz="0 0 0" rpy="${-pi/2} 0 ${-pi/2}" />
         </joint>
-        <gazebo reference="zed_mount_link">
+        <gazebo reference="zed2_camera_center">
             <sensor type="depth" name="zed_depth_camera">
                 <visualize>false</visualize>
                 <update_rate>10.0</update_rate>
@@ -45,7 +45,7 @@
                         <namespace>${robot_namespace}</namespace>
                         <!-- Remappings for the ZED Camera Nodes -->
                     </ros>
-                    <frame_name>zed_depth_link_optical</frame_name>
+                    <frame_name>zed2_right_camera_optical_frame</frame_name>
                     <cameraName>zed_depth_camera</cameraName>
                     <hack_baseline>0.07</hack_baseline>
                     <min_depth>0.2</min_depth>
