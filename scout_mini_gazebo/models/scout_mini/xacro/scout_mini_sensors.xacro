@@ -15,16 +15,10 @@
             <origin xyz="0 0 0" rpy="0 0 0" />
         </xacro:zed_camera>
 
-        <link name="zed_depth_link_optical" />
-        <joint name="zed_depth_joint_optical" type="fixed">
-            <parent link="zed_mount_link" />
-            <child link="zed_depth_link_optical" />
-            <origin xyz="0 0 0" rpy="${-pi/2} 0 ${-pi/2}" />
-        </joint>
         <gazebo reference="zed2_camera_center">
             <sensor type="depth" name="zed_depth_camera">
                 <visualize>false</visualize>
-                <update_rate>10.0</update_rate>
+                <update_rate>30.0</update_rate>
                 <always_on>true</always_on>
                 <pose>0 0 0 0 0 0</pose>
                 <camera name="zed_depth_camera">

@@ -26,7 +26,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: ""
+    SyncSource: Depth_to_LaserScan
 Visualization Manager:
   Class: ""
   Displays:
@@ -53,6 +53,8 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: true
+        IMU:
+          Value: true
         base_link:
           Value: true
         commander_slim_link:
@@ -65,23 +67,33 @@ Visualization Manager:
           Value: true
         inertial_link:
           Value: true
+        odom:
+          Value: true
         rear_left_wheel_link:
           Value: true
         rear_mount:
           Value: true
         rear_right_wheel_link:
           Value: true
-        zed2i_base_link:
+        zed2_baro_link:
           Value: true
-        zed2i_camera_center:
+        zed2_base_link:
           Value: true
-        zed2i_left_camera_frame:
+        zed2_camera_center:
           Value: true
-        zed2i_left_camera_optical_frame:
+        zed2_left_camera_frame:
           Value: true
-        zed2i_right_camera_frame:
+        zed2_left_camera_optical_frame:
           Value: true
-        zed2i_right_camera_optical_frame:
+        zed2_mag_link:
+          Value: true
+        zed2_right_camera_frame:
+          Value: true
+        zed2_right_camera_optical_frame:
+          Value: true
+        zed2_temp_left_link:
+          Value: true
+        zed2_temp_right_link:
           Value: true
         zed_mount_link:
           Value: true
@@ -93,14 +105,24 @@ Visualization Manager:
       Tree:
         base_link:
           commander_slim_link:
+            IMU:
+              {}
             zed_mount_link:
-              zed2i_base_link:
-                zed2i_camera_center:
-                  zed2i_left_camera_frame:
-                    zed2i_left_camera_optical_frame:
+              zed2_base_link:
+                zed2_camera_center:
+                  zed2_baro_link:
+                    {}
+                  zed2_left_camera_frame:
+                    zed2_left_camera_optical_frame:
                       {}
-                  zed2i_right_camera_frame:
-                    zed2i_right_camera_optical_frame:
+                    zed2_temp_left_link:
+                      {}
+                  zed2_mag_link:
+                    {}
+                  zed2_right_camera_frame:
+                    zed2_right_camera_optical_frame:
+                      {}
+                    zed2_temp_right_link:
                       {}
           front_left_wheel_link:
             {}
@@ -116,6 +138,8 @@ Visualization Manager:
             {}
           rear_right_wheel_link:
             {}
+        odom:
+          {}
       Update Interval: 0
       Value: true
     - Alpha: 1
@@ -135,6 +159,10 @@ Visualization Manager:
         Expand Joint Details: false
         Expand Link Details: false
         Expand Tree: false
+        IMU:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
         Link Tree Style: Links in Alphabetic Order
         base_link:
           Alpha: 1
@@ -178,28 +206,44 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        zed2i_base_link:
+        zed2_baro_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        zed2i_camera_center:
+        zed2_base_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        zed2_camera_center:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        zed2i_left_camera_frame:
+        zed2_left_camera_frame:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        zed2i_left_camera_optical_frame:
+        zed2_left_camera_optical_frame:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        zed2i_right_camera_frame:
+        zed2_mag_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        zed2i_right_camera_optical_frame:
+        zed2_right_camera_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        zed2_right_camera_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        zed2_temp_left_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        zed2_temp_right_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -215,6 +259,40 @@ Visualization Manager:
       Update Interval: 0
       Value: true
       Visual Enabled: true
+    - Alpha: 1
+      Autocompute Intensity Bounds: true
+      Autocompute Value Bounds:
+        Max Value: 0.1060672253370285
+        Min Value: 0.02896568551659584
+        Value: true
+      Axis: Z
+      Channel Name: intensity
+      Class: rviz_default_plugins/LaserScan
+      Color: 224; 27; 36
+      Color Transformer: FlatColor
+      Decay Time: 0
+      Enabled: true
+      Invert Rainbow: false
+      Max Color: 255; 255; 255
+      Max Intensity: 4096
+      Min Color: 0; 0; 0
+      Min Intensity: 0
+      Name: Depth_to_LaserScan
+      Position Transformer: XYZ
+      Selectable: true
+      Size (Pixels): 3
+      Size (m): 0.05000000074505806
+      Style: Flat Squares
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        Filter size: 10
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /scout_mini/scan
+      Use Fixed Frame: true
+      Use rainbow: true
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -261,7 +339,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 2.374293565750122
+      Distance: 5.846903324127197
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -276,10 +354,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.3153974711894989
+      Pitch: 0.15039731562137604
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 5.13358211517334
+      Yaw: 3.6385741233825684
     Saved: ~
 Window Geometry:
   Displays:
@@ -297,5 +375,5 @@ Window Geometry:
   Views:
     collapsed: false
   Width: 1200
-  X: 60
+  X: 74
   Y: 60

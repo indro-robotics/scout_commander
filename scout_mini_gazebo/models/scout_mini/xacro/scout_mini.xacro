@@ -65,22 +65,22 @@
 
 
     <!-- Scout wheel macros -->
-    <xacro:scout_mini_wheel wheel_prefix="front_right">
+    <xacro:scout_mini_wheel wheel_prefix="front_right" joint_type="continuous">
         <origin xyz="0 0 0" rpy="1.57 0 0" />
         <origin xyz="${wheelbase/2} ${-track/2} ${wheel_vertical_offset}" rpy="0 0 0" />
     </xacro:scout_mini_wheel>
 
-    <xacro:scout_mini_wheel wheel_prefix="front_left">
+    <xacro:scout_mini_wheel wheel_prefix="front_left" joint_type="continuous">
         <origin xyz="0 0 0" rpy="-1.57 0 0" />
         <origin xyz="${wheelbase/2} ${track/2} ${wheel_vertical_offset}" rpy="0 0 0" />
     </xacro:scout_mini_wheel>
 
-    <xacro:scout_mini_wheel wheel_prefix="rear_left">
+    <xacro:scout_mini_wheel wheel_prefix="rear_left" joint_type="continuous">
         <origin xyz="0 0 0" rpy="-1.57 0 0" />
         <origin xyz="${-wheelbase/2} ${track/2} ${wheel_vertical_offset}" rpy="0 0 0" />
     </xacro:scout_mini_wheel>
 
-    <xacro:scout_mini_wheel wheel_prefix="rear_right">
+    <xacro:scout_mini_wheel wheel_prefix="rear_right" joint_type="continuous">
         <origin xyz="0 0 0" rpy="1.57 0 0" />
         <origin xyz="${-wheelbase/2} ${-track/2} ${wheel_vertical_offset}" rpy="0 0 0" />
     </xacro:scout_mini_wheel>

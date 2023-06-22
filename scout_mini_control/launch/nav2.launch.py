@@ -29,11 +29,6 @@ def generate_launch_description():
     sim_time_argument = DeclareLaunchArgument(name='use_sim_time', default_value='True',
                                               description='Flag to enable use_sim_time')
 
-    scanner_arg = DeclareLaunchArgument(
-        name='scanner', default_value='scout_mini',
-        description='Namespace for sample topics'
-    )
-
     nav2_bringup_launch = ExecuteProcess(
         name="launch_navigation",
         cmd=[
@@ -53,32 +48,43 @@ def generate_launch_description():
         output="screen"
 
     )
-    pointcloud_to_laserscan_launch = Node(
-        package='pointcloud_to_laserscan', executable='pointcloud_to_laserscan_node',
-        remappings=[('cloud_in', 'scout_mini/zed_depth_camera/points'),
+    depthimage_to_laserscan_launch = Node(
+        package='depthimage_to_laserscan', executable='depthimage_to_laserscan_node',
+        remappings=[('depth', '/scout_mini/zed_depth_camera/depth/image_raw'),
+                    ('depth_camera_info', '/scout_mini/zed_depth_camera/depth/camera_info'),
                     ('scan', 'scout_mini/scan')],
         parameters=[{
-                'target_frame': 'cloud',
-                'transform_tolerance': 0.01,
-                'min_height': 0.0,
-                'max_height': 1.0,
-                'angle_min': -1.0472,  # -M_PI/2
-                'angle_max': 1.0472,  # M_PI/2
-                'angle_increment': 0.0087,  # M_PI/360.0
-                'scan_time': 0.03333,
-                'range_min': 0.2,
-                'range_max': 20.0,
-                'use_inf': True,
-                'inf_epsilon': 1.0,
-                'use_sim_time' : True
+                'range_min' : 0.2,
+                'range_max' : 20.0,
+                'scan_time' : 0.0333333,
+                'output_frame' : 'zed2_right_camera_frame',
         }],
-        name='pointcloud_to_laserscan'
+        name='depthimage_to_laserscan'
+    )
+
+    nav2_bringup_launch = ExecuteProcess(
+        name="launch_navigation",
+        cmd=[
+            "ros2",
+            "launch",
+            PathJoinSubstitution(
+                [
+                    FindPackageShare("nav2_bringup"),
+                    "launch",
+                    "navigation_launch.py",
+                ]
+            ),
+            "use_sim_time:=True",
+            str("params_file:=" + str(os.path.join(scout_mini_control_pkg, 'config', 'nav2.yaml')))
+        ],
+        output="screen"
+
     )
 
     # Navigation Nodes
-    # ld.add_action(nav2_bringup_launch)
-    ld.add_action(scanner_arg)
-    ld.add_action(pointcloud_to_laserscan_launch)
+    ld.add_action(nav2_bringup_launch)
+    ld.add_action(depthimage_to_laserscan_launch)
+
     ld.add_action(sim_time_argument)
 
     return ld

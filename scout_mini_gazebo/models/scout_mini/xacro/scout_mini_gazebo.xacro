@@ -9,7 +9,7 @@
                     <remapping>odom:=zed_node/odom</remapping>
                 </ros>
                 <!-- Update rate in Hz -->
-                <update_rate>50</update_rate>
+                <update_rate>30</update_rate>
                 <!-- wheels -->
                 <num_wheel_pairs>2</num_wheel_pairs>
                 <left_joint>front_left_wheel</left_joint>
@@ -33,7 +33,7 @@
                 <publish_wheel_tf>true</publish_wheel_tf>
                 <odometry_topic>zed_node/odom</odometry_topic>
                 <odometry_frame>odom</odometry_frame>
-                <robot_base_frame>base_link</robot_base_frame>
+                <robot_base_frame>base_footprint</robot_base_frame>
             </plugin>
         </gazebo>
     </xacro:macro>

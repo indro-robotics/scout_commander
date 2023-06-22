@@ -25,7 +25,7 @@ def generate_launch_description():
 
     ekf_config = os.path.join(scout_mini_control_pkg, 'config/ekf.yaml')
 
-    sim_time_argument = DeclareLaunchArgument(name='use_sim_time', default_value='True',
+    sim_time_argument = DeclareLaunchArgument(name='use_sim_time', default_value='False',
                                               description='Flag to enable use_sim_time')
 
     # Robot Description File
@@ -77,6 +77,6 @@ def generate_launch_description():
     ld.add_action(robot_state_publisher_node)
 
     # Sensor launch
-    ld.add_action(IMU_launch)
+    #ld.add_action(IMU_launch)
 
     return ld
