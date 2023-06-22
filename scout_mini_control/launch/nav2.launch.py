@@ -46,7 +46,7 @@ def generate_launch_description():
                     "navigation_launch.py",
                 ]
             ),
-            "use_sim_time:=True",
+            "use_sim_time:=False",
             str("params_file:=" +
                 str(os.path.join(scout_mini_control_pkg, 'config', 'nav2.yaml')))
         ],
@@ -55,8 +55,8 @@ def generate_launch_description():
     )
     pointcloud_to_laserscan_launch = Node(
         package='pointcloud_to_laserscan', executable='pointcloud_to_laserscan_node',
-        remappings=[('cloud_in', [LaunchConfiguration(variable_name='scanner'), '/zed_depth_camera/points']),
-                    ('scan', [LaunchConfiguration(variable_name='scanner'), '/scan'])],
+        remappings=[('cloud_in', 'scout_mini/zed_depth_camera/points'),
+                    ('scan', 'scout_mini/scan')],
         parameters=[{
                 'target_frame': 'cloud',
                 'transform_tolerance': 0.01,
@@ -69,7 +69,8 @@ def generate_launch_description():
                 'range_min': 0.2,
                 'range_max': 20.0,
                 'use_inf': True,
-                'inf_epsilon': 1.0
+                'inf_epsilon': 1.0,
+                'use_sim_time' : True
         }],
         name='pointcloud_to_laserscan'
     )

@@ -90,12 +90,12 @@
     <xacro:depth_camera />
 
 
-    <!-- <link name="base_footprint" />
+    <link name="base_footprint" />
     <joint name="base_footprint_joint" type="fixed">
         <origin xyz="0 0 0.16" />
         <parent link="base_footprint" />
         <child link="base_link" />
-    </joint> -->
+    </joint>
     <link name="front_mount" />
 
     <joint name="front_mount_joint" type="fixed">

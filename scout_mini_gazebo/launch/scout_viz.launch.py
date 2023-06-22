@@ -33,7 +33,7 @@ def generate_launch_description():
 
     ld = LaunchDescription()
 
-    sim_time_argument = DeclareLaunchArgument(name='use_sim_time', default_value='True',
+    sim_time_argument = DeclareLaunchArgument(name='use_sim_time', default_value='False',
                                               description='Flag to enable use_sim_time')
 
     scout_description_install_dir = get_package_prefix(
@@ -134,8 +134,6 @@ def generate_launch_description():
     scout_mini_control_pkg = get_package_share_directory('scout_mini_control')
 
     ekf_config = os.path.join(scout_mini_control_pkg, 'config/ekf.yaml')
-    sim_time_argument = DeclareLaunchArgument(name='use_sim_time', default_value='True',
-                                              description='Flag to enable use_sim_time')
 
     robot_localization_node = Node(
         package='robot_localization',
@@ -147,11 +145,34 @@ def generate_launch_description():
             'use_sim_time': LaunchConfiguration('use_sim_time')}]
     )
 
+    pointcloud_to_laserscan_launch = Node(
+        package='pointcloud_to_laserscan', executable='pointcloud_to_laserscan_node',
+        remappings=[('cloud_in', 'scout_mini/zed_depth_camera/points'),
+                    ('scan', 'scout_mini/scan')],
+        parameters=[{
+                'target_frame': 'cloud',
+                'transform_tolerance': 0.01,
+                'min_height': 0.0,
+                'max_height': 1.0,
+                'angle_min': -1.0472,  # -M_PI/2
+                'angle_max': 1.0472,  # M_PI/2
+                'angle_increment': 0.0087,  # M_PI/360.0
+                'scan_time': 0.03333,
+                'range_min': 0.2,
+                'range_max': 20.0,
+                'use_inf': True,
+                'inf_epsilon': 1.0,
+                'use_sim_time' : True
+        }],
+        name='pointcloud_to_laserscan'
+    )
+
     # Adding arguments
     ld.add_action(sim_time_argument)
 
     # Navigation Nodes
     ld.add_action(robot_localization_node)
+    ld.add_action(pointcloud_to_laserscan_launch)
 
     # Launching robot TF broadcaster
     ld.add_action(robot_state_publisher_node)
