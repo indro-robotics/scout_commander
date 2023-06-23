@@ -36,5 +36,49 @@
                 <robot_base_frame>base_footprint</robot_base_frame>
             </plugin>
         </gazebo>
+        <gazebo reference="front_right_wheel">
+            <surface>
+                <friction>
+                    <mu>0.7</mu>
+                    <mu2>0.0</mu2>
+                    <fdir1>1 0 0</fdir1>
+                    <slip1>1.0</slip1>
+                    <slip2>1.0</slip2>
+                </friction>
+            </surface>
+        </gazebo>
+        <gazebo reference="front_left_wheel">
+            <surface>
+                <friction>
+                    <mu>0.7</mu>
+                    <mu2>0.0</mu2>
+                    <fdir1>1 0 0</fdir1>
+                    <slip1>1.0</slip1>
+                    <slip2>1.0</slip2>
+                </friction>
+            </surface>
+        </gazebo>
+        <gazebo reference="rear_right_wheel">
+            <surface>
+                <friction>
+                    <mu>0.7</mu>
+                    <mu2>0.0</mu2>
+                    <fdir1>1 0 0</fdir1>
+                    <slip1>1.0</slip1>
+                    <slip2>1.0</slip2>
+                </friction>
+            </surface>
+        </gazebo>
+        <gazebo reference="rear_left_wheel">
+            <surface>
+                <friction>
+                    <mu>0.7</mu>
+                    <mu2>0.0</mu2>
+                    <fdir1>1 0 0</fdir1>
+                    <slip1>1.0</slip1>
+                    <slip2>1.0</slip2>
+                </friction>
+            </surface>
+        </gazebo>
     </xacro:macro>
 </robot>

@@ -53,7 +53,8 @@
         <inertial>
             <mass value="60" />
             <origin xyz="0.0 0.0 0.0" />
-            <inertia ixx="2.288641" ixy="0" ixz="0" iyy="5.103976" iyz="0" izz="3.431465" />
+            <!-- <inertia ixx="2.288641" ixy="0" ixz="0" iyy="5.103976" iyz="0" izz="3.431465" /> -->
+            <inertia ixx="3.0" ixy="0" ixz="0" iyy="3.0" iyz="0" izz="3.431465" />
         </inertial>
     </link>
 
@@ -65,22 +66,22 @@
 
 
     <!-- Scout wheel macros -->
-    <xacro:scout_mini_wheel wheel_prefix="front_right" joint_type="continuous">
+    <xacro:scout_mini_wheel wheel_prefix="front_right" joint_type="continuous" reflect="-1">
         <origin xyz="0 0 0" rpy="1.57 0 0" />
         <origin xyz="${wheelbase/2} ${-track/2} ${wheel_vertical_offset}" rpy="0 0 0" />
     </xacro:scout_mini_wheel>
 
-    <xacro:scout_mini_wheel wheel_prefix="front_left" joint_type="continuous">
+    <xacro:scout_mini_wheel wheel_prefix="front_left" joint_type="continuous" reflect="1">
         <origin xyz="0 0 0" rpy="-1.57 0 0" />
         <origin xyz="${wheelbase/2} ${track/2} ${wheel_vertical_offset}" rpy="0 0 0" />
     </xacro:scout_mini_wheel>
 
-    <xacro:scout_mini_wheel wheel_prefix="rear_left" joint_type="continuous">
+    <xacro:scout_mini_wheel wheel_prefix="rear_left" joint_type="continuous" reflect="1">
         <origin xyz="0 0 0" rpy="-1.57 0 0" />
         <origin xyz="${-wheelbase/2} ${track/2} ${wheel_vertical_offset}" rpy="0 0 0" />
     </xacro:scout_mini_wheel>
 
-    <xacro:scout_mini_wheel wheel_prefix="rear_right" joint_type="continuous">
+    <xacro:scout_mini_wheel wheel_prefix="rear_right" joint_type="continuous" reflect="-1">
         <origin xyz="0 0 0" rpy="1.57 0 0" />
         <origin xyz="${-wheelbase/2} ${-track/2} ${wheel_vertical_offset}" rpy="0 0 0" />
     </xacro:scout_mini_wheel>

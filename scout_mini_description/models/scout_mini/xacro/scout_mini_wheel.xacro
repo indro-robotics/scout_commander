@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro" name="scout_wheel">
 
-    <xacro:macro name="scout_mini_wheel" params="wheel_prefix joint_type *visual_origin *joint_pose">
+    <xacro:macro name="scout_mini_wheel" params="reflect wheel_prefix joint_type *visual_origin *joint_pose">
         <link name="${wheel_prefix}_wheel_link">
             <inertial>
                 <mass value="3" />
-                <origin xyz="0 0 0" />
-                <inertia ixx="0.7171" ixy="0" ixz="0" iyy="0.7171" iyz="0" izz="0.1361" />
+                <origin xyz="0 ${reflect * 0.05} 0" />
+                <inertia ixx="0.012" ixy="0" ixz="0" iyy="0.012" iyz="0" izz="0.012" />
             </inertial>
             <visual>
                 <xacro:insert_block name="visual_origin" />
