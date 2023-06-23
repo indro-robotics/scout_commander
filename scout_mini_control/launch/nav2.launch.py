@@ -42,10 +42,9 @@ def generate_launch_description():
                                    'config', 'slam.yaml'),
         description='Full path to the ROS2 parameters file to use for the slam_toolbox node')
 
-    declare_namespace_argument = DeclareLaunchArgument('namespace', default_value='scout_mini',
-        description='Top-level namespace')
-    
-    declare_use_namespace_argument = DeclareLaunchArgument('use_namespace', default_value='True', description='Whether or not to use the namespace argument')
+    # declare_namespace_argument = DeclareLaunchArgument('namespace', default_value='scout_mini',
+    #     description='Top-level namespace')
+    # declare_use_namespace_argument = DeclareLaunchArgument('use_namespace', default_value='True', description='Whether or not to use the namespace argument')
 
     # Launching Nodes
     start_async_slam_toolbox_node = Node(
@@ -74,11 +73,6 @@ def generate_launch_description():
         name='depthimage_to_laserscan'
     )
     
-
-    slam_toolbox_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            [slam_toolbox_pkg, '/launch/online_async_launch.py']),
-    )
     nav2_bringup_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([
             PathJoinSubstitution([
@@ -101,12 +95,10 @@ def generate_launch_description():
     ld.add_action(declare_slam_params_file_cmd)
     
     #ld.add_action(declare_namespace_argument) #NOT WORKING IN THE CURRENT NAV STACK -- GET FAILURE TO LOAD CRITICS
-    #ld.add_action(declare_use_namespace_argument)
+    #ld.add_action(declare_use_namespace_argument) # NOT WORKING IN THE CURRENT NAV STACK -- GET FAILURE TO LOAD CRITICS
+
     # Navigation Nodes
     ld.add_action(start_async_slam_toolbox_node)
-
-
-    #ld.add_action(slam_toolbox_launch)
     ld.add_action(nav2_bringup_launch)
     ld.add_action(depthimage_to_laserscan_launch)
 
