@@ -60,15 +60,15 @@ def generate_launch_description():
 
     depthimage_to_laserscan_launch = Node(
         package='depthimage_to_laserscan', executable='depthimage_to_laserscan_node',
-        remappings=[('depth', '/scout_mini/zed_depth_camera/depth/image_raw'),
-                    ('depth_camera_info', '/scout_mini/zed_depth_camera/depth/camera_info'),
+        remappings=[('depth', '/scout_mini/zed_node/depth/depth_registered'),
+                    ('depth_camera_info', '/scout_mini/zed_node/depth/camera_info'),
                     ('scan', 'scout_mini/scan')],
         parameters=[{
                 'range_min' : 0.2,
                 'scan_height' : 5,
                 'range_max' : 10.0,
                 'scan_time' : 0.0333333,
-                'output_frame' : 'zed2_right_camera_frame',
+                'output_frame' : 'scout_mini_right_camera_frame',
         }],
         name='depthimage_to_laserscan'
     )
