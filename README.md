@@ -29,21 +29,47 @@ colcon build --packages-select scout_mini_description scout_mini_control
 ## Launching the robot
 To launch the robot in this package, there are two main launch file methods.
 
-**Launching the robot to visualize movement in RVIZ**
+### **Launching the robot in a simulated Gazebo Environment**
 
-When launching the robot on your host computer (note the robot side computer) where you wish to visualize the robot with accurate wheel movement, you will use the launch file in the `scout_mini_description` package:
-```
-ros2 launch scout_mini_description scout_mini_viz.launch.py
-```
+When launching the robot in a simulated environment, used for tuning and experimentation with the navigation system without a physical robot, you are going to use the launch files and files in the `scout_mini_gazebo` package. 
 
-**Launching the robot navigation TF for odometry and fusion**
-
-When launching the navigation stack from your robot to fuse odometry and launch your IMU node, you will use the launch file in the `scout_mini_control` package:
+To launch the robot, first launch the robot description, with included sensor simulations, with `scout_mini_gazebo` launch file:
 ```
-ros2 launch scout_mini_control scout_navigation.launch.py
+ros2 launch scout_mini_gazebo scout_viz.launch.py
 ```
+This launches the simulated robot model, the navigation stack is launched in a separate control directory in `scout_mini_control`.
 
-Make sure that your ZED 2 Node is launched in the separate docker container. To launch this node in the docker container with the correct parameters, run this command:
+
+### **Launching the robot in a physical environment**
+
+Due to ROS version limitations with Jetson NX computers, the ZED2 camera node is launched in a native `FOXY` installation, and the navigation and control scripts are launched within a `HUMBLE` docker container. 
+#### **NATIVE FOXY** 
+From the native `FOXY` installation, we are going to launch the `zed_wrapper` node that publishes all the needed ZED2 camera topics. The SDK and wrapper are already installed on the Jetson. Launch the ZED2 camera node using the following `ros2 launch` command:
 ```
 ros2 launch zed_wrapper zed2.launch.py base_frame:=base_footprint publish_tf:=true cam_pose:=[0.277812,0.0,0.176212,0.0,0.0,0.0] camera_name:=scout_mini
 ```
+This should bringup all the required topics. 
+#### **HUMBLE CONTAINER**
+From within the humble container we are going to launch the `microstrain_imu` , the `EKF_node`, and the static `TF`.
+
+ The difference between the Gazebo `TF` and the static `TF` being that no Gazebo sensors or wheel odometry are launched in conjunction. 
+
+Use the the launch file in the `scout_mini_control` package.
+```
+ros2 launch scout_mini_control scout_bringup.launch.py
+```
+
+This node launches the static `TF` publisher, the `EKF` node, and the `IMU` launch node. The appropriate topics are already set in the configurations and these nodes will publish all the `ROS2 Humble` nodes needed for navigation.
+
+To launch the Navigation 2 stack to begin SLAM, after the above two nodes have been started, we are going to launch our `nav2.launch.py` file:
+```
+ros2 launch scout_mini_control nav2.launch.py
+```
+
+## Visualizing ROBOT over CYCLONEDDS
+The physical robot is installed with CYCLONEDDS. Assuming appropriate configurations are set, all robot topics should be visible in your local computers ROS environment. To visualize these topics, use the `rviz2.launch.py` file in the `scout_mini_control` package:
+```
+ros2 launch scout_mini_control rviz2.launch.py
+```
+
+This launches RVIZ using the appropriate configuration to visualize all the required nodes. 
