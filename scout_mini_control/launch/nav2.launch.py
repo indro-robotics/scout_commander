@@ -34,7 +34,7 @@ def generate_launch_description():
     #Declaring Arguments
     declare_use_sim_time_argument = DeclareLaunchArgument(
         'use_sim_time',
-        default_value='true',
+        default_value='False',
         description='Use simulation/Gazebo clock')
     declare_slam_params_file_cmd = DeclareLaunchArgument(
         'slam_params_file',
@@ -82,7 +82,7 @@ def generate_launch_description():
         ]),
         launch_arguments={
             # 'namespace': 'scout_mini',
-            'use_sim_time' : 'true',
+            'use_sim_time' : 'False',
             'params_file' : str(os.path.join(scout_mini_control_pkg, 'config', 'nav2.yaml')),
             # 'container_name' : 'scout_mini',
 
