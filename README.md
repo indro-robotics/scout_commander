@@ -23,9 +23,17 @@ If all the dependencies were succesfully installed, you should receive the follo
 Next, in order for the ZED2 camera to be visualized (and used), you must have the ROS2 ZED wrapper package installed into your workspace. Instructions to do this can be found [here](https://www.stereolabs.com/docs/ros2/). Make sure to install all the prerequisites before building your package.  
 
 Once finished, you can build the package using the `colcon build` command:
+
 ```
-colcon build --packages-select scout_mini_description scout_mini_control
+colcon build --packages-select scout_mini_description scout_mini_control scout_mini_gazebo
 ```
+
+**Note: if building on the physical robot, delete the `scout_mini_gazebo` package, as there will be unmet dependencies**:
+```
+cd ~/humble_ws/src/scout_commander/
+rm -rf scout_mini_gazebo
+```
+
 ## Launching the robot
 To launch the robot in this package, there are two main launch file methods.
 
