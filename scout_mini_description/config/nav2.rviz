@@ -55,6 +55,8 @@ Visualization Manager:
         All Enabled: true
         IMU:
           Value: true
+        base_footprint:
+          Value: true
         base_link:
           Value: true
         commander_slim_link:
@@ -66,6 +68,8 @@ Visualization Manager:
         front_right_wheel_link:
           Value: true
         inertial_link:
+          Value: true
+        map:
           Value: true
         odom:
           Value: true
@@ -103,41 +107,44 @@ Visualization Manager:
       Show Axes: true
       Show Names: false
       Tree:
-        base_link:
-          commander_slim_link:
-            IMU:
+        base_footprint:
+          base_link:
+            commander_slim_link:
+              IMU:
+                {}
+              zed_mount_link:
+                zed2_base_link:
+                  zed2_camera_center:
+                    zed2_baro_link:
+                      {}
+                    zed2_left_camera_frame:
+                      zed2_left_camera_optical_frame:
+                        {}
+                      zed2_temp_left_link:
+                        {}
+                    zed2_mag_link:
+                      {}
+                    zed2_right_camera_frame:
+                      zed2_right_camera_optical_frame:
+                        {}
+                      zed2_temp_right_link:
+                        {}
+            front_mount:
               {}
-            zed_mount_link:
-              zed2_base_link:
-                zed2_camera_center:
-                  zed2_baro_link:
-                    {}
-                  zed2_left_camera_frame:
-                    zed2_left_camera_optical_frame:
-                      {}
-                    zed2_temp_left_link:
-                      {}
-                  zed2_mag_link:
-                    {}
-                  zed2_right_camera_frame:
-                    zed2_right_camera_optical_frame:
-                      {}
-                    zed2_temp_right_link:
-                      {}
+            inertial_link:
+              {}
+            rear_mount:
+              {}
           front_left_wheel_link:
-            {}
-          front_mount:
             {}
           front_right_wheel_link:
             {}
-          inertial_link:
-            {}
           rear_left_wheel_link:
-            {}
-          rear_mount:
             {}
           rear_right_wheel_link:
             {}
+        map:
+          {}
         odom:
           {}
       Update Interval: 0
@@ -164,6 +171,10 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
         Link Tree Style: Links in Alphabetic Order
+        base_footprint:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
         base_link:
           Alpha: 1
           Show Axes: false
@@ -293,6 +304,61 @@ Visualization Manager:
       Use Fixed Frame: true
       Use rainbow: true
       Value: true
+    - Alpha: 0.699999988079071
+      Class: rviz_default_plugins/Map
+      Color Scheme: map
+      Draw Behind: true
+      Enabled: true
+      Name: Global_CostMap
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        Filter size: 10
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /global_costmap/costmap
+      Update Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /global_costmap/costmap_updates
+      Use Timestamp: false
+      Value: true
+    - Alpha: 0.699999988079071
+      Class: rviz_default_plugins/Map
+      Color Scheme: map
+      Draw Behind: false
+      Enabled: true
+      Name: Local_CostMap
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        Filter size: 10
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /local_costmap/costmap
+      Update Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /local_costmap/costmap_updates
+      Use Timestamp: false
+      Value: true
+    - Alpha: 1
+      Class: rviz_default_plugins/Polygon
+      Color: 25; 255; 0
+      Enabled: true
+      Name: Robot_FootPrint
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        Filter size: 10
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /global_costmap/published_footprint
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -339,25 +405,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 5.846903324127197
+      Distance: 18.11046600341797
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0
-        Y: 0
-        Z: 0
+        X: 2.465947389602661
+        Y: 2.183000326156616
+        Z: 0.9785584807395935
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.15039731562137604
+      Pitch: 0.5703972578048706
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 3.6385741233825684
+      Yaw: 1.2835794687271118
     Saved: ~
 Window Geometry:
   Displays:
@@ -375,5 +441,5 @@ Window Geometry:
   Views:
     collapsed: false
   Width: 1200
-  X: 74
-  Y: 60
+  X: 603
+  Y: 169
