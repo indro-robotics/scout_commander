@@ -34,7 +34,7 @@ def generate_launch_description():
     #Declaring Arguments
     declare_use_sim_time_argument = DeclareLaunchArgument(
         'use_sim_time',
-        default_value='true',
+        default_value='False',
         description='Use simulation/Gazebo clock')
     declare_slam_params_file_cmd = DeclareLaunchArgument(
         'slam_params_file',
@@ -60,15 +60,15 @@ def generate_launch_description():
 
     depthimage_to_laserscan_launch = Node(
         package='depthimage_to_laserscan', executable='depthimage_to_laserscan_node',
-        remappings=[('depth', '/scout_mini/zed_depth_camera/depth/image_raw'),
-                    ('depth_camera_info', '/scout_mini/zed_depth_camera/depth/camera_info'),
+        remappings=[('depth', '/scout_mini/zed_node/depth/depth_registered'),
+                    ('depth_camera_info', '/scout_mini/zed_node/depth/camera_info'),
                     ('scan', 'scout_mini/scan')],
         parameters=[{
                 'range_min' : 0.2,
                 'scan_height' : 5,
                 'range_max' : 10.0,
                 'scan_time' : 0.0333333,
-                'output_frame' : 'zed2_right_camera_frame',
+                'output_frame' : 'scout_mini_right_camera_frame',
         }],
         name='depthimage_to_laserscan'
     )
@@ -82,7 +82,7 @@ def generate_launch_description():
         ]),
         launch_arguments={
             # 'namespace': 'scout_mini',
-            'use_sim_time' : 'true',
+            'use_sim_time' : 'False',
             'params_file' : str(os.path.join(scout_mini_control_pkg, 'config', 'nav2.yaml')),
             # 'container_name' : 'scout_mini',
 
