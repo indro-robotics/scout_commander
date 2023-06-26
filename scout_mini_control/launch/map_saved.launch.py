@@ -7,8 +7,10 @@ from launch_ros.actions import Node
 def generate_launch_description():
 
     map_file = os.path.join(get_package_share_directory(
-        'scout_mini_control'), 'maps', 'my_map.yaml')
+        'scout_mini_control'), 'maps', 'test1.yaml') #LAUNCH ARGUMENT SET
+    
     ld = LaunchDescription()
+
 
     nav2_map_server = Node(
             package='nav2_map_server',
@@ -16,9 +18,10 @@ def generate_launch_description():
             name='map_server',
             output='screen',
             parameters=[{'use_sim_time': False},
-                        {'yaml_filename': map_file}
-    ])
+                        {'yaml_filename': map_file}]
+    )
 
+    
     lifecycle_nav2_maps = Node(
             package='nav2_lifecycle_manager',
             executable='lifecycle_manager',
@@ -26,9 +29,10 @@ def generate_launch_description():
             output='screen',
             parameters=[{'use_sim_time': False},
                         {'autostart': True},
-                        {'node_names': ['map_server']}])
-    ])
-    
+                        {'node_names': ['map_server']}]
+                        
+    )
+
     ld.add_action(nav2_map_server)
     ld.add_action(lifecycle_nav2_maps)
 
