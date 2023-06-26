@@ -81,3 +81,34 @@ ros2 launch scout_mini_control rviz2.launch.py
 ```
 
 This launches RVIZ using the appropriate configuration to visualize all the required nodes. 
+
+
+## Saving the Map of the surrounding Environment 
+To save the map of the environment, keep the navigation node running, when you are satisfied with the map you are building,
+run this command to save the map. It is better to save the map in the config folder of the scout_commander, because it will
+save the map at the location, where the command is run from
+
+Open a New Terminal (Dont close any running node)
+```
+cd src/scout_commander/scout_mini_control/maps
+
+ros2 run nav2_map_server map_saver_cli -f my_map
+
+```
+
+This command will generate two files:
+
+my_map.pgm image file. Is the map as an occupancy grid image.
+my_map.yaml file which contains details about the resolution of the map.
+
+
+
+## Loading the saved Map 
+In order to load the save map in the Rviz2, 
+```
+ros2 launch scout_mini_control map_saved.launch.py
+```
+Goto Rviz and click  Add and add Map to it. A Map Tab is generated in the left column. 
+Note: If in case you donot see the saved Map. Expand the Map Tab. Go to Topic and change to /map 
+If Still no map appears change the Durability Policy to Transient.
+The saved map will appear.
