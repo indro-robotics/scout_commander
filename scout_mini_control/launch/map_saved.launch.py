@@ -8,31 +8,28 @@ def generate_launch_description():
 
     map_file = os.path.join(get_package_share_directory(
         'scout_mini_control'), 'maps', 'my_map.yaml')
+    ld = LaunchDescription()
 
-    return LaunchDescription([
-        Node(
+    nav2_map_server = Node(
             package='nav2_map_server',
             executable='map_server',
             name='map_server',
             output='screen',
-            parameters=[{'use_sim_time': True},
+            parameters=[{'use_sim_time': False},
                         {'yaml_filename': map_file}
-                        ]),
+    ])
 
-        Node(
-            package='rviz2',
-            executable='rviz2',
-            name='rviz2',
-            parameters=[{'use_sim_time': True}],
-            output='screen'
-        ),
-
-        Node(
+    lifecycle_nav2_maps = Node(
             package='nav2_lifecycle_manager',
             executable='lifecycle_manager',
             name='lifecycle_manager_mapper',
             output='screen',
-            parameters=[{'use_sim_time': True},
+            parameters=[{'use_sim_time': False},
                         {'autostart': True},
                         {'node_names': ['map_server']}])
     ])
+    
+    ld.add_action(nav2_map_server)
+    ld.add_action(lifecycle_nav2_maps)
+
+    return ld
