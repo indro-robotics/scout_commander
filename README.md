@@ -98,7 +98,7 @@ ros2 run nav2_map_server map_saver_cli -f my_map
 
 This command will generate two files:
 
-my_map.pgm image file. Is the map as an occupancy grid image.
+my_map.pgm image file. Is the map as an occupancy grid image.\n
 my_map.yaml file which contains details about the resolution of the map.
 
 
