@@ -64,11 +64,11 @@ def generate_launch_description():
         'log_level', default_value='info',
         description='log level')
     
-    declare_slam_params_file_cmd = DeclareLaunchArgument(
-        'slam_params_file',
-        default_value=os.path.join(get_package_share_directory("scout_mini_control"),
-                                   'params', 'slam_params.yaml'),
-        description='Full path to the ROS2 parameters file to use for the slam_toolbox node')
+    # declare_slam_params_file_cmd = DeclareLaunchArgument(
+    #     'slam_params_file',
+    #     default_value=os.path.join(get_package_share_directory("scout_mini_control"),
+    #                                'params', 'slam_params.yaml'),
+    #     description='Full path to the ROS2 parameters file to use for the slam_toolbox node')
 
 
     # Nodes launching commands
@@ -128,7 +128,7 @@ def generate_launch_description():
     ld.add_action(declare_autostart_cmd)
     ld.add_action(declare_use_respawn_cmd)
     ld.add_action(declare_log_level_cmd)
-    ld.add_action(declare_slam_params_file_cmd)
+    # ld.add_action(declare_slam_params_file_cmd)
 
     # Running Map Saver Server
     ld.add_action(start_map_server)
