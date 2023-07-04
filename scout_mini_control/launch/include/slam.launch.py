@@ -19,6 +19,7 @@ def generate_launch_description():
     autostart = LaunchConfiguration('autostart')
     use_respawn = LaunchConfiguration('use_respawn')
     log_level = LaunchConfiguration('log_level')
+    slam_params_file = LaunchConfiguration('slam_params_file')
 
     # Variables
     lifecycle_nodes = ['map_saver']
@@ -62,6 +63,13 @@ def generate_launch_description():
     declare_log_level_cmd = DeclareLaunchArgument(
         'log_level', default_value='info',
         description='log level')
+    
+    declare_slam_params_file_cmd = DeclareLaunchArgument(
+        'slam_params_file',
+        default_value=os.path.join(get_package_share_directory("scout_mini_control"),
+                                   'params', 'slam_params.yaml'),
+        description='Full path to the ROS2 parameters file to use for the slam_toolbox node')
+
 
     # Nodes launching commands
 
@@ -86,19 +94,30 @@ def generate_launch_description():
                             {'node_names': lifecycle_nodes}])
         ])
 
-    has_slam_toolbox_params = HasNodeParams(source_file=params_file,
-                                            node_name='slam_toolbox')
+    start_async_slam_toolbox_node = Node(
+        parameters=[
+          slam_params_file,
+          {'use_sim_time': use_sim_time}
+        ],
+        package='slam_toolbox',
+        executable='async_slam_toolbox_node',
+        name='slam_toolbox',
+        namespace='scout_mini',
+        output='screen')
+    
+    # has_slam_toolbox_params = HasNodeParams(source_file=params_file,
+    #                                         node_name='slam_toolbox')
 
-    start_slam_toolbox_cmd = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(slam_launch_file),
-        launch_arguments={'use_sim_time': use_sim_time}.items(),
-        condition=UnlessCondition(has_slam_toolbox_params))
+    # start_slam_toolbox_cmd = IncludeLaunchDescription(
+    #     PythonLaunchDescriptionSource(slam_launch_file),
+    #     launch_arguments={'use_sim_time': use_sim_time}.items(),
+    #     condition=UnlessCondition(has_slam_toolbox_params))
 
-    start_slam_toolbox_cmd_with_params = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(slam_launch_file),
-        launch_arguments={'use_sim_time': use_sim_time,
-                          'slam_params_file': params_file}.items(),
-        condition=IfCondition(has_slam_toolbox_params))
+    # start_slam_toolbox_cmd_with_params = IncludeLaunchDescription(
+    #     PythonLaunchDescriptionSource(slam_launch_file),
+    #     launch_arguments={'use_sim_time': use_sim_time,
+    #                       'slam_params_file': params_file}.items(),
+    #     condition=IfCondition(has_slam_toolbox_params))
 
     ld = LaunchDescription()
 
@@ -109,12 +128,14 @@ def generate_launch_description():
     ld.add_action(declare_autostart_cmd)
     ld.add_action(declare_use_respawn_cmd)
     ld.add_action(declare_log_level_cmd)
+    ld.add_action(declare_slam_params_file_cmd)
 
     # Running Map Saver Server
     ld.add_action(start_map_server)
 
     # Running SLAM Toolbox (Only one of them will be run)
-    ld.add_action(start_slam_toolbox_cmd)
-    ld.add_action(start_slam_toolbox_cmd_with_params)
+    # ld.add_action(start_slam_toolbox_cmd)
+    # ld.add_action(start_slam_toolbox_cmd_with_params)
+    ld.add_action(start_async_slam_toolbox_node)
 
     return ld
