@@ -56,7 +56,7 @@ def generate_launch_description():
 
     # Assigning Variables
     map_file = os.path.join(get_package_share_directory(
-        'scout_mini_control'), 'maps', LaunchConfiguration('map')
+        'scout_mini_control'), 'maps', str(LaunchConfiguration('map'))
     )
 
     # Launching Nodes
