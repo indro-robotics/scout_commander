@@ -6,8 +6,6 @@ from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, GroupAction
 from launch.actions import SetEnvironmentVariable
 from launch.conditions import IfCondition, LaunchConfigurationEquals, LaunchConfigurationNotEquals
-from launch.substitutions import EqualsSubstitution
-from launch.substitutions import NotEqualsSubstitution
 from launch.substitutions import LaunchConfiguration, PythonExpression
 from launch_ros.actions import LoadComposableNodes, SetParameter
 from launch_ros.actions import Node
