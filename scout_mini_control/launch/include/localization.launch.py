@@ -20,7 +20,7 @@ def generate_launch_description():
     map = LaunchConfiguration('map')
     namespace = LaunchConfiguration('namespace')
     map_yaml_file = os.path.join(get_package_share_directory(
-        'scout_mini_control'), 'maps', map)
+        'scout_mini_control'), 'maps', str(map))
     use_sim_time = LaunchConfiguration('use_sim_time')
     autostart = LaunchConfiguration('autostart')
     params_file = LaunchConfiguration('params_file')
