@@ -110,7 +110,7 @@ def generate_launch_description():
                 respawn=use_respawn,
                 respawn_delay=2.0,
                 parameters=[configured_params,
-                            {'yaml_filename': map_yaml_filepath + '/' + map}],
+                            {'yaml_filename': str(map_yaml_filepath + '/' + map)}],
                 arguments=['--ros-args', '--log-level', log_level],
                 remappings=remappings),
             Node(
