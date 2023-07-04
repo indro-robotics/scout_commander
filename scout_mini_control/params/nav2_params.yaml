@@ -42,6 +42,11 @@ amcl:
     set_initial_pose: false
     always_reset_initial_pose: false
     first_map_only: False # Allows AMCL to accept maps more than once on the map_topic, especially when using the LoadMap service in map_server
+    initial_pose:
+      x: 0.0
+      y: 0.0
+      z: 0.0
+      yaw: 0.0
 
 bt_navigator:
   ros__parameters:
