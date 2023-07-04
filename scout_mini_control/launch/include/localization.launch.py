@@ -140,7 +140,7 @@ def generate_launch_description():
             SetParameter('use_sim_time', use_sim_time),
             LoadComposableNodes(
                 target_container=container_name_full,
-                condition=IfCondition(EqualsSubstitution(LaunchConfiguration('map'), '')),
+                condition=LaunchConfigurationEquals('map',''),
                 composable_node_descriptions=[
                     ComposableNode(
                         package='nav2_map_server',
@@ -152,7 +152,7 @@ def generate_launch_description():
             ),
             LoadComposableNodes(
                 target_container=container_name_full,
-                condition=IfCondition(NotEqualsSubstitution(LaunchConfiguration('map'), '')),
+                condition=LaunchConfigurationNotEquals('map', ''),
                 composable_node_descriptions=[
                     ComposableNode(
                         package='nav2_map_server',
