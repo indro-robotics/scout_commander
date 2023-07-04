@@ -15,7 +15,7 @@
       map_frame: map
       base_frame: base_footprint
       scan_topic: /scout_mini/scan
-      mode: localization #mapping #localization
+      mode: mapping #mapping #localization
 
       # if you'd like to immediately start continuing a map at a given pose
       # or at the dock, but they are mutually exclusive, if pose is given
