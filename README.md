@@ -34,10 +34,9 @@ cd ~/humble_ws/src/scout_commander/
 rm -rf scout_mini_gazebo
 ```
 
-## Launching the robot
-To launch the robot in this package, there are two main launch file methods.
 
-### **Launching the robot in a simulated Gazebo Environment**
+
+# **Launching the robot in a simulated Gazebo Environment**
 
 When launching the robot in a simulated environment, used for tuning and experimentation with the navigation system without a physical robot, you are going to use the launch files and files in the `scout_mini_gazebo` package. 
 
@@ -48,7 +47,7 @@ ros2 launch scout_mini_gazebo scout_viz.launch.py
 This launches the simulated robot model, the navigation stack is launched in a separate control directory in `scout_mini_control`.
 
 
-### **Launching the robot in a physical environment**
+# **Launching the robot in a physical environment**
 
 Due to ROS version limitations with Jetson NX computers, the ZED2 camera node is launched in a native `FOXY` installation, and the navigation and control scripts are launched within a `HUMBLE` docker container. 
 #### **NATIVE FOXY** 
@@ -69,7 +68,7 @@ ros2 launch scout_mini_control scout_bringup.launch.py
 
 This node launches the static `TF` publisher, the `EKF` node, the `IMU` launch node, and the `depth_image_to_laserscan` node. The appropriate topics are already set in the configurations and these nodes will publish all the `ROS2 Humble` nodes needed for navigation.
 
-### Launching the robot in MAPPING mode
+## **Launching the robot in MAPPING mode**
 
 To launch the robot in a `mapping` mode in order to create a map of the environment, you will use the `navigation_bringup` launch file in the `scout_mini_control` directory and pass in the `slam` argument.
 ```
@@ -85,24 +84,7 @@ ros2 run nav2_map_server map_saver_cli -f <map_name>
 
 This will save your map into a `<map_name>.yaml` and `<map_name>.pgm` file format.
 
-### Launching robot in LOCALIZATION MODE
-
-If you have already created the map above, or have a map of your environment, you can launch the robot into `localization` mode and pass in that map file. That is done using the `navigation_bringup` launch file and passing through the `map` parameter.
-```
-ros2 launch scout_mini_control navigation_bringup map:=<PATH_TO_MAP_FILE>
-```
-
-
-## Visualizing ROBOT over CYCLONEDDS
-The physical robot is installed with CYCLONEDDS. Assuming appropriate configurations are set, all robot topics should be visible in your local computers ROS environment. To visualize these topics, use the `rviz2.launch.py` file in the `scout_mini_control` package:
-```
-ros2 launch scout_mini_control rviz2.launch.py
-```
-
-This launches RVIZ using the appropriate configuration to visualize all the required nodes. 
-
-
-## Saving the Map of the surrounding Environment 
+## **Saving the Map of the surrounding Environment**
 To save the map of the environment, keep the navigation node running, when you are satisfied with the map you are building,
 run this command to save the map. It is better to save the map in the config folder of the scout_commander, because it will
 save the map at the location, where the command is run from
@@ -121,13 +103,21 @@ my_map.pgm image file. Is the map as an occupancy grid image.\n
 my_map.yaml file which contains details about the resolution of the map.
 
 
+## **Launching robot in LOCALIZATION MODE**
 
-## Loading the saved Map 
-In order to load the save map in the Rviz2, 
+If you have already created the map above, or have a map of your environment, you can launch the robot into `localization` mode and pass in that map file. That is done using the `navigation_bringup` launch file and passing through the `map` parameter.
 ```
-ros2 launch scout_mini_control map_saved.launch.py
+ros2 launch scout_mini_control navigation_bringup map:=<PATH_TO_MAP_FILE>
 ```
-Goto Rviz and click  Add and add Map to it. A Map Tab is generated in the left column. 
-Note: If in case you donot see the saved Map. Expand the Map Tab. Go to Topic and change to /map 
-If Still no map appears change the Durability Policy to Transient.
-The saved map will appear.
+
+
+# Visualizing ROBOT over CYCLONEDDS
+The physical robot is installed with CYCLONEDDS. Assuming appropriate configurations are set, all robot topics should be visible in your local computers ROS environment. To visualize these topics, use the `rviz2.launch.py` file in the `scout_mini_control` package:
+```
+ros2 launch scout_mini_control rviz2.launch.py
+```
+
+This launches RVIZ using the appropriate configuration to visualize all the required nodes. 
+
+
+
