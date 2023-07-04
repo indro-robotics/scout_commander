@@ -19,8 +19,8 @@ def generate_launch_description():
     scout_mini_control_dir = get_package_share_directory('scout_mini_control')
     map = LaunchConfiguration('map')
     namespace = LaunchConfiguration('namespace')
-    map_yaml_file = os.path.join(get_package_share_directory(
-        'scout_mini_control'), 'maps', str(map))
+    map_yaml_filepath = os.path.join(get_package_share_directory(
+        'scout_mini_control'), 'maps')
     use_sim_time = LaunchConfiguration('use_sim_time')
     autostart = LaunchConfiguration('autostart')
     params_file = LaunchConfiguration('params_file')
@@ -110,7 +110,7 @@ def generate_launch_description():
                 respawn=use_respawn,
                 respawn_delay=2.0,
                 parameters=[configured_params,
-                            {'yaml_filename': map_yaml_file}],
+                            {'yaml_filename': map_yaml_filepath + '/' + map}],
                 arguments=['--ros-args', '--log-level', log_level],
                 remappings=remappings),
             Node(
