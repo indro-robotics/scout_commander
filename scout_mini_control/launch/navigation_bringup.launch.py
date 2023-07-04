@@ -111,7 +111,7 @@ def generate_launch_description():
             output='screen'),
 
         IncludeLaunchDescription(
-            PythonLaunchDescriptionSource(os.path.join(scout_mini_control_dir, 'launch', 'slam.launch.py')),
+            PythonLaunchDescriptionSource(os.path.join(scout_mini_control_dir, 'launch','include', 'slam.launch.py')),
             condition=IfCondition(slam),
             launch_arguments={'namespace': namespace,
                               'use_sim_time': use_sim_time,
@@ -120,7 +120,7 @@ def generate_launch_description():
                               'params_file': params_file}.items()),
 
         IncludeLaunchDescription(
-            PythonLaunchDescriptionSource(os.path.join(scout_mini_control_dir, 'launch',
+            PythonLaunchDescriptionSource(os.path.join(scout_mini_control_dir, 'launch', 'include',
                                                        'localization.launch.py')),
             condition=IfCondition(PythonExpression(['not ', slam])),
             launch_arguments={'namespace': namespace,
@@ -133,7 +133,7 @@ def generate_launch_description():
                               'container_name': 'nav2_container'}.items()),
 
         IncludeLaunchDescription(
-            PythonLaunchDescriptionSource(os.path.join(scout_mini_control_dir, 'launch', 'navigation.launch.py')),
+            PythonLaunchDescriptionSource(os.path.join(scout_mini_control_dir, 'launch', 'include','navigation.launch.py')),
             launch_arguments={'namespace': namespace,
                               'use_sim_time': use_sim_time,
                               'autostart': autostart,
