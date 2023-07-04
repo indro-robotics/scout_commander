@@ -66,6 +66,20 @@ def generate_launch_description():
             'namespace': 'scout_mini',
         }.items(),
     )
+    depthimage_to_laserscan_launch = Node(
+        package='depthimage_to_laserscan', executable='depthimage_to_laserscan_node',
+        remappings=[('depth', '/scout_mini/zed_node/depth/depth_registered'),
+                    ('depth_camera_info', '/scout_mini/zed_node/depth/camera_info'),
+                    ('scan', 'scout_mini/scan')],
+        parameters=[{
+                'range_min' : 0.2,
+                'scan_height' : 5,
+                'range_max' : 10.0,
+                'scan_time' : 0.0333333,
+                'output_frame' : 'scout_mini_right_camera_frame',
+        }],
+        name='depthimage_to_laserscan'
+    )
 
     # Adding arguments
 
@@ -78,5 +92,6 @@ def generate_launch_description():
 
     # Sensor launch
     ld.add_action(IMU_launch)
+    ld.add_action(depthimage_to_laserscan_launch)
 
     return ld
