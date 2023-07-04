@@ -23,7 +23,7 @@ def generate_launch_description():
     scout_mini_description_pkg = get_package_share_directory(
         'scout_mini_description')
 
-    ekf_config = os.path.join(scout_mini_control_pkg, 'config/ekf.yaml')
+    ekf_config = os.path.join(scout_mini_control_pkg, 'params/ekf_params.yaml')
 
     sim_time_argument = DeclareLaunchArgument(name='use_sim_time', default_value='False',
                                               description='Flag to enable use_sim_time')
