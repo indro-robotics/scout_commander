@@ -10,7 +10,7 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import PathJoinSubstitution, TextSubstitution
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
-from launch.conditions import IfCondition, UnlessCondition
+from launch.conditions import IfCondition, UnlessCondition, LaunchConfigurationEquals
 from launch.substitutions import LaunchConfiguration
 
 from launch.actions import (
@@ -24,12 +24,12 @@ def generate_launch_description():
 
     # Package Share Directories
     scout_mini_control_pkg = get_package_share_directory('scout_mini_control')
-    slam_toolbox_pkg = get_package_share_directory('slam_toolbox')
 
     # Launch Configurations
     use_sim_time = LaunchConfiguration('use_sim_time')
     namespace = LaunchConfiguration('namespace')
     slam_params_file = LaunchConfiguration('slam_params_file')
+    declare_mode_argument = LaunchConfiguration('mode')
 
     #Declaring Arguments
     declare_use_sim_time_argument = DeclareLaunchArgument(
@@ -41,10 +41,23 @@ def generate_launch_description():
         default_value=os.path.join(get_package_share_directory("scout_mini_control"),
                                    'config', 'slam.yaml'),
         description='Full path to the ROS2 parameters file to use for the slam_toolbox node')
+    
+    declare_mode_argument = DeclareLaunchArgument(
+        'mode',
+        default_value='mapping',
+        description='The navigation mode that the robot will be launched in: values are "mapping" and "localization"'
+    )
+    declare_map_file = DeclareLaunchArgument(
+        'map',
+        default_value='map.yaml',
+        description='The map file to be used in the localization mode of navigation'
 
-    # declare_namespace_argument = DeclareLaunchArgument('namespace', default_value='scout_mini',
-    #     description='Top-level namespace')
-    # declare_use_namespace_argument = DeclareLaunchArgument('use_namespace', default_value='True', description='Whether or not to use the namespace argument')
+    )
+
+    # Assigning Variables
+    map_file = os.path.join(get_package_share_directory(
+        'scout_mini_control'), 'maps', LaunchConfiguration('map')
+    )
 
     # Launching Nodes
     start_async_slam_toolbox_node = Node(
@@ -56,7 +69,8 @@ def generate_launch_description():
         executable='async_slam_toolbox_node',
         name='slam_toolbox',
         namespace='scout_mini',
-        output='screen')
+        output='screen',
+        condition=LaunchConfigurationEquals('mode', 'mapping'))
 
     depthimage_to_laserscan_launch = Node(
         package='depthimage_to_laserscan', executable='depthimage_to_laserscan_node',
@@ -89,18 +103,44 @@ def generate_launch_description():
         }.items(),
     )
 
+    nav2_map_server = Node(
+            package='nav2_map_server',
+            executable='map_server',
+            name='map_server',
+            output='screen',
+            parameters=[{'use_sim_time': False},
+                        {'yaml_filename': map_file}],
+            condition=LaunchConfigurationEquals('mode','localization')
+    )
+
+    
+    lifecycle_nav2_maps = Node(
+            package='nav2_lifecycle_manager',
+            executable='lifecycle_manager',
+            name='lifecycle_manager_mapper',
+            output='screen',
+            parameters=[{'use_sim_time': False},
+                        {'autostart': True},
+                        {'node_names': ['map_server']}],
+            condition=LaunchConfigurationEquals('mode','localization')
+                        
+    )
+
+
     ld = LaunchDescription()
     # Launch Arguments
     ld.add_action(declare_use_sim_time_argument)
     ld.add_action(declare_slam_params_file_cmd)
+    ld.add_action(declare_mode_argument)
+    ld.add_action(declare_map_file)
     
-    #ld.add_action(declare_namespace_argument) #NOT WORKING IN THE CURRENT NAV STACK -- GET FAILURE TO LOAD CRITICS
-    #ld.add_action(declare_use_namespace_argument) # NOT WORKING IN THE CURRENT NAV STACK -- GET FAILURE TO LOAD CRITICS
 
     # Navigation Nodes
     ld.add_action(start_async_slam_toolbox_node)
     ld.add_action(nav2_bringup_launch)
     ld.add_action(depthimage_to_laserscan_launch)
+    ld.add_action(nav2_map_server)
+    ld.add_action(lifecycle_nav2_maps)
 
 
     return ld
