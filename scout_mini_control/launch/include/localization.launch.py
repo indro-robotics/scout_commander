@@ -5,7 +5,7 @@ from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, GroupAction
 from launch.actions import SetEnvironmentVariable
-from launch.conditions import IfCondition
+from launch.conditions import IfCondition, LaunchConfigurationEquals, LaunchConfigurationNotEquals
 from launch.substitutions import EqualsSubstitution
 from launch.substitutions import NotEqualsSubstitution
 from launch.substitutions import LaunchConfiguration, PythonExpression
@@ -91,7 +91,8 @@ def generate_launch_description():
         actions=[
             SetParameter('use_sim_time', use_sim_time),
             Node(
-                condition=IfCondition(EqualsSubstitution(LaunchConfiguration('map'), '')),
+                #condition=IfCondition(EqualsSubstitution(LaunchConfiguration('map'), '')),
+                condition=LaunchConfigurationEquals('map',''),
                 package='nav2_map_server',
                 executable='map_server',
                 name='map_server',
@@ -102,7 +103,8 @@ def generate_launch_description():
                 arguments=['--ros-args', '--log-level', log_level],
                 remappings=remappings),
             Node(
-                condition=IfCondition(NotEqualsSubstitution(LaunchConfiguration('map'), '')),
+                condition=LaunchConfigurationNotEquals('map',''),
+                #condition=IfCondition(NotEqualsSubstitution(LaunchConfiguration('map'), '')),
                 package='nav2_map_server',
                 executable='map_server',
                 name='map_server',
