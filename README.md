@@ -67,12 +67,31 @@ Use the the launch file in the `scout_mini_control` package.
 ros2 launch scout_mini_control scout_bringup.launch.py
 ```
 
-This node launches the static `TF` publisher, the `EKF` node, and the `IMU` launch node. The appropriate topics are already set in the configurations and these nodes will publish all the `ROS2 Humble` nodes needed for navigation.
+This node launches the static `TF` publisher, the `EKF` node, the `IMU` launch node, and the `depth_image_to_laserscan` node. The appropriate topics are already set in the configurations and these nodes will publish all the `ROS2 Humble` nodes needed for navigation.
 
-To launch the Navigation 2 stack to begin SLAM, after the above two nodes have been started, we are going to launch our `nav2.launch.py` file:
+### Launching the robot in MAPPING mode
+
+To launch the robot in a `mapping` mode in order to create a map of the environment, you will use the `navigation_bringup` launch file in the `scout_mini_control` directory and pass in the `slam` argument.
 ```
-ros2 launch scout_mini_control nav2.launch.py
+ros2 launch scout_mini_control navigation_bringup slam:=true
 ```
+
+This will launch the robot in a mapping mode. You can now manually drive the robot around it's environment to create a map.
+
+Once ready to save your map, navigate to the `scout_mini_control/maps` folder and use the following command:
+```
+ros2 run nav2_map_server map_saver_cli -f <map_name>
+```
+
+This will save your map into a `<map_name>.yaml` and `<map_name>.pgm` file format.
+
+### Launching robot in LOCALIZATION MODE
+
+If you have already created the map above, or have a map of your environment, you can launch the robot into `localization` mode and pass in that map file. That is done using the `navigation_bringup` launch file and passing through the `map` parameter.
+```
+ros2 launch scout_mini_control navigation_bringup map:=<PATH_TO_MAP_FILE>
+```
+
 
 ## Visualizing ROBOT over CYCLONEDDS
 The physical robot is installed with CYCLONEDDS. Assuming appropriate configurations are set, all robot topics should be visible in your local computers ROS environment. To visualize these topics, use the `rviz2.launch.py` file in the `scout_mini_control` package:
