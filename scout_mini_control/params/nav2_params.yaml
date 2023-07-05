@@ -48,13 +48,13 @@ amcl:
       z: 0.0
       yaw: 0.0
 
-  amcl_map_client:
-    ros__parameters:
-      use_sim_time: False
+  # amcl_map_client:
+  #   ros__parameters:
+  #     use_sim_time: False
   
-  amcl_rclcpp_node:
-    ros__parameters:
-      use_sim_time: False
+  # amcl_rclcpp_node:
+  #   ros__parameters:
+  #     use_sim_time: False
 
 bt_navigator:
   ros__parameters:
@@ -505,7 +505,6 @@ map_saver:
     free_thresh_default: 0.25
     occupied_thresh_default: 0.65
     map_subscribe_transient_local: True
-
 
 # OLD CONTROLLERS
 
