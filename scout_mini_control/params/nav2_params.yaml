@@ -171,7 +171,7 @@ controller_server:
       allow_reversing: false # Enables robot to drive in the reverse direction
       rotate_to_heading_min_angle: 0.785 # The difference in the path orientation and the starting robot orientation (radians) to trigger a rotate in place
       max_angular_accel: 3.2 # Maximum allowable angular acceleration (rad/s/s) while rotating to heading
-      max_robot_pose_search_dist: -1
+      max_robot_pose_search_dist: 10.0
       use_interpolatoin: true # Enable linear interpolation between poses for lookahead point selection
 
       #ASKING FOR CRITICS
