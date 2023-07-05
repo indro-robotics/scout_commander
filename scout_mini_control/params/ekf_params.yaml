@@ -17,7 +17,7 @@
                         print_diagnostics: true
 
                         # Dating the transforms to be in the future
-                        transform_time_offset: 1.0
+                        # transform_time_offset: 1.0
 
                         # Whether to broadcast the transformation over the /tf topic. Defaults to true if unspecified.
                         publish_tf: true
