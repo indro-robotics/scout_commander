@@ -121,3 +121,8 @@ This launches RVIZ using the appropriate configuration to visualize all the requ
 
 
 
+DOCKER COMPOSE UP 
+
+Launch command: ros2 launch scout_base scout_mini_base.launch.py base_frame:=base_footprint
+
+
