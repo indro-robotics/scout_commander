@@ -175,11 +175,11 @@ controller_server:
       use_interpolatoin: true # Enable linear interpolation between poses for lookahead point selection
 
       #ASKING FOR CRITICS
-      critics: ["RotateToGoal", "Oscillation", "BaseObstacle", "GoalAlign", "PathAlign", "PathDist", "GoalDist"]
+      # critics: ["RotateToGoal", "Oscillation", "BaseObstacle", "GoalAlign", "PathAlign", "PathDist", "GoalDist"]
 
-  controller_server_rclcpp_node: 
-    ros__parameters:
-      use_sim_time: False
+  # controller_server_rclcpp_node: 
+  #   ros__parameters:
+  #     use_sim_time: False
 
 
 planner_server:
