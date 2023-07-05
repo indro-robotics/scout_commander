@@ -150,32 +150,93 @@ controller_server:
       yaw_goal_tolerance: 0.25
     # DWB parameters
     FollowPath:
-      plugin: "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController"
-      desired_linear_vel: 1.0
-      lookahead_dist: 0.6 # The lookahead distance (m) to use to find the lookahead point when 'use_velocity_scaled_lookahead_dist' is false
-      min_lookahead_dist: 0.3
-      max_lookahead_dist: 0.9
-      lookahead_time: 1.5 # The time (s) to project the velocity by when 'use_velocity_scaled_lookahead_dist' is true
-      rotate_to_heading_angular_vel: 1.5 # Speed to rotate when use_rotate_to_heading is true
-      use_velocity_scaled_lookahead_dist: true
-      min_approach_linear_velocity: 0.05 # The minimum velocity (m/s) threshold to apply when approaching the goal to ensure progress
-      approach_velocity_scaling_dist: 0.6 # The distance (m) left on the path at which to start slowing down
-      use_collision_detection: true # Whether to enable collision detection
-      max_allowed_time_to_collision_up_to_carrot: 1.0 # The time (s) to project a velocity command forward to check for collisions when 'use_collision_detection' is true
-      use_regulated_linear_velocity_scaling: true # Whether to use regulated features for path curvature (e.g. slow on high curvature paths)
-      use_cost_regulated_linear_velocity_scaling: true # Whether to use regulated features for proximity to obstacles (e.g. slow in proximity to obstacles)
-      regulated_linear_scaling_min_radius: 0.90 # The turning radius (m) for which the regulation features are triggered when 'use_regulated_linear_velocity_scaling' is true
-      regulated_linear_scaling_min_speed: 0.25 # The minimum speed that any of the regulated hueristics can send
-      use_fixed_curvature_lookahead: false # Whether to use a fixed lookahead distance to compute curvature from
-      use_rotate_to_heading: true # Whether to enable rotating to rough heading and goal orientation when using holonomic planners
-      allow_reversing: false # Enables robot to drive in the reverse direction
-      rotate_to_heading_min_angle: 0.785 # The difference in the path orientation and the starting robot orientation (radians) to trigger a rotate in place
-      max_angular_accel: 3.2 # Maximum allowable angular acceleration (rad/s/s) while rotating to heading
-      max_robot_pose_search_dist: 10.0
-      use_interpolatoin: true # Enable linear interpolation between poses for lookahead point selection
+      plugin: "dwb_core::DWBLocalPlanner"
+      debug_trajectory_details: True
+      min_vel_x: 0.0
+      min_vel_y: 0.0
+      max_vel_x: 0.26
+      max_vel_y: 0.0
+      max_vel_theta: 1.0
+      min_speed_xy: 0.0
+      max_speed_xy: 0.26
+      min_speed_theta: 0.0
+      # Add high threshold velocity for turtlebot 3 issue.
+      # https://github.com/ROBOTIS-GIT/turtlebot3_simulations/issues/75
+      acc_lim_x: 2.5
+      acc_lim_y: 0.0
+      acc_lim_theta: 3.2
+      decel_lim_x: -2.5
+      decel_lim_y: 0.0
+      decel_lim_theta: -3.2
+      vx_samples: 20
+      vy_samples: 5
+      vtheta_samples: 20
+      sim_time: 1.7
+      linear_granularity: 0.05
+      angular_granularity: 0.025
+      transform_tolerance: 0.2
+      xy_goal_tolerance: 0.25
+      trans_stopped_velocity: 0.25
+      short_circuit_trajectory_evaluation: True
+      stateful: True
+      critics: ["RotateToGoal", "Oscillation", "BaseObstacle", "GoalAlign", "PathAlign", "PathDist", "GoalDist"]
+      
+      # Critics
+      RotateToGoal:
+        scale: 5.0
+        lookahead_time: -1.0
+        slowing_factor: 2.5
+        trans_stopped_velocity: 0.25
+      Oscillation:
+        oscillation_reset_dist: 0.05
+        oscillation_reset_angle: 0.2
+        oscillation_reset_time: -1.0
+        x_only_threshold: 0.05
+        scale: 0.5
+      BaseObstacle:
+        scale: 0.02
+        sum_scores: false
+      GoalAlign:
+        forward_point_distance: 0.1
+        aggregation_type: last
+        scale: 24.0
+      PathAlign:
+        scale: 32.0
+        forward_point_distance: 0.1
+        aggregation_type: last
+      PathDist:
+        aggregation_type: last
+        scale: 1.0
+      GoalDist: 
+        aggregation_type: last
+        scale: 20.0
+      
 
-      #ASKING FOR CRITICS
-      # critics: ["RotateToGoal", "Oscillation", "BaseObstacle", "GoalAlign", "PathAlign", "PathDist", "GoalDist"]
+    # RPPC parameters
+    # FollowPath:
+    #   plugin: "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController"
+    #   desired_linear_vel: 1.0
+    #   lookahead_dist: 0.6 # The lookahead distance (m) to use to find the lookahead point when 'use_velocity_scaled_lookahead_dist' is false
+    #   min_lookahead_dist: 0.3
+    #   max_lookahead_dist: 0.9
+    #   lookahead_time: 1.5 # The time (s) to project the velocity by when 'use_velocity_scaled_lookahead_dist' is true
+    #   rotate_to_heading_angular_vel: 1.5 # Speed to rotate when use_rotate_to_heading is true
+    #   use_velocity_scaled_lookahead_dist: true
+    #   min_approach_linear_velocity: 0.05 # The minimum velocity (m/s) threshold to apply when approaching the goal to ensure progress
+    #   approach_velocity_scaling_dist: 0.6 # The distance (m) left on the path at which to start slowing down
+    #   use_collision_detection: true # Whether to enable collision detection
+    #   max_allowed_time_to_collision_up_to_carrot: 1.0 # The time (s) to project a velocity command forward to check for collisions when 'use_collision_detection' is true
+    #   use_regulated_linear_velocity_scaling: true # Whether to use regulated features for path curvature (e.g. slow on high curvature paths)
+    #   use_cost_regulated_linear_velocity_scaling: true # Whether to use regulated features for proximity to obstacles (e.g. slow in proximity to obstacles)
+    #   regulated_linear_scaling_min_radius: 0.90 # The turning radius (m) for which the regulation features are triggered when 'use_regulated_linear_velocity_scaling' is true
+    #   regulated_linear_scaling_min_speed: 0.25 # The minimum speed that any of the regulated hueristics can send
+    #   use_fixed_curvature_lookahead: false # Whether to use a fixed lookahead distance to compute curvature from
+    #   use_rotate_to_heading: true # Whether to enable rotating to rough heading and goal orientation when using holonomic planners
+    #   allow_reversing: false # Enables robot to drive in the reverse direction
+    #   rotate_to_heading_min_angle: 0.785 # The difference in the path orientation and the starting robot orientation (radians) to trigger a rotate in place
+    #   max_angular_accel: 3.2 # Maximum allowable angular acceleration (rad/s/s) while rotating to heading
+    #   max_robot_pose_search_dist: 10.0
+    #   use_interpolatoin: true # Enable linear interpolation between poses for lookahead point selection
 
 controller_server_rclcpp_node: 
   ros__parameters:
@@ -384,8 +445,8 @@ slam_toolbox:
 local_costmap:
   local_costmap:
     ros__parameters:
-      update_frequency: 5.0
-      publish_frequency: 2.0
+      update_frequency: 7.5
+      publish_frequency: 5.0
       global_frame: odom
       robot_base_frame: base_footprint
       use_sim_time: False
@@ -481,7 +542,7 @@ global_costmap:
         plugin: "nav2_costmap_2d::InflationLayer"
         cost_scaling_factor: 3.0
         inflation_radius: 0.125
-      always_send_full_costmap: True
+      always_send_full_costmap: False
 
   global_costmap_client:
     ros__parameters:
