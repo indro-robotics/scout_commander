@@ -13,7 +13,8 @@
                         # by, for example, an IMU. Defaults to false if unspecified.
                         two_d_mode: true
                         # Whether to publish the acceleration state. Defaults to false if unspecified.
-                        publish_acceleration: true
+                        publish_acceleration: false
+                        print_diagnostics: true
 
                         # Whether to broadcast the transformation over the /tf topic. Defaults to true if unspecified.
                         publish_tf: true
@@ -41,10 +42,10 @@
                                         false, false, true,
                                         false, false, false,
                                 ]
-                        odom0_queue_size: 10
-                        odom0_nodelay: true
-                        odom0_differential: false
-                        odom0_relative: false
+                        # odom0_queue_size: 10
+                        # odom0_nodelay: false
+                        # odom0_differential: false
+                        # odom0_relative: false
 
                         imu0: imu/data # Microstrain IMU
                         imu0_config:
@@ -55,10 +56,10 @@
                                         false, false, false,
                                         false, false, false,
                                 ]
-                        imu0_nodelay: false
-                        imu0_differential: false
-                        imu0_relative: false
-                        imu0_queue_size: 10
+                        # imu0_nodelay: false
+                        # imu0_differential: false
+                        # imu0_relative: false
+                        # imu0_queue_size: 10
 
                         # imu1: zed_node/imu/data # ZED Camera IMU
                         # imu1_config:
