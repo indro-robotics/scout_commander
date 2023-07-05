@@ -94,18 +94,18 @@ def generate_launch_description():
                             {'node_names': lifecycle_nodes}])
         ])
 
-    start_async_slam_toolbox_node = Node(
-        parameters=[
-          slam_params_file,
-          {'use_sim_time': use_sim_time}
-        ],
-        package='slam_toolbox',
-        executable='sync_slam_toolbox_node',
-        name='slam_toolbox',
-        namespace='scout_mini',
-        output='screen')
+    # start_async_slam_toolbox_node = Node(
+    #     parameters=[
+    #       slam_params_file,
+    #       {'use_sim_time': use_sim_time}
+    #     ],
+    #     package='slam_toolbox',
+    #     executable='sync_slam_toolbox_node',
+    #     name='slam_toolbox',
+    #     namespace='scout_mini',
+    #     output='screen')
     
-    has_slam_toolbox_params = HasNodeParams(source_file=params_file,
+    has_slam_toolbox_params = HasNodeParams(source_file=slam_params_file,
                                             node_name='slam_toolbox')
 
     start_slam_toolbox_cmd = IncludeLaunchDescription(
@@ -116,7 +116,7 @@ def generate_launch_description():
     start_slam_toolbox_cmd_with_params = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(slam_launch_file),
         launch_arguments={'use_sim_time': use_sim_time,
-                          'slam_params_file': params_file}.items(),
+                          'slam_params_file': slam_params_file}.items(),
         condition=IfCondition(has_slam_toolbox_params))
 
     ld = LaunchDescription()
@@ -134,8 +134,8 @@ def generate_launch_description():
     ld.add_action(start_map_server)
 
     # Running SLAM Toolbox (Only one of them will be run)
-    # ld.add_action(start_slam_toolbox_cmd)
-    # ld.add_action(start_slam_toolbox_cmd_with_params)
-    ld.add_action(start_async_slam_toolbox_node)
+    ld.add_action(start_slam_toolbox_cmd)
+    ld.add_action(start_slam_toolbox_cmd_with_params)
+    # ld.add_action(start_async_slam_toolbox_node)
 
     return ld
