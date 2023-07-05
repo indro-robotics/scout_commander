@@ -213,7 +213,7 @@ planner_server:
         max_iterations: 1000              # The maximum number of iterations the smoother has to smooth the path, to bound potential computation
         w_smooth: 0.3                     # Weight for smoother to apply to smooth out the data points
         w_data: 0.2                       # Weight for smoother to apply to retain original data information
-        tolerance: 1e-10                  # Parameter tolerance change amount to terminate smoothing session
+        tolerance: 0.0000000001           # Parameter tolerance change amount to terminate smoothing session
         do_refinement: true               # Performs extra refinement smoothing runs
         refinement_num: 2                 # Number of times to recursively attempt to smooth
 
