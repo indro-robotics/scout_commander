@@ -177,9 +177,9 @@ controller_server:
       #ASKING FOR CRITICS
       # critics: ["RotateToGoal", "Oscillation", "BaseObstacle", "GoalAlign", "PathAlign", "PathDist", "GoalDist"]
 
-  # controller_server_rclcpp_node: 
-  #   ros__parameters:
-  #     use_sim_time: False
+controller_server_rclcpp_node: 
+  ros__parameters:
+    use_sim_time: False
 
 
 planner_server:
