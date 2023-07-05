@@ -72,7 +72,7 @@ This node launches the static `TF` publisher, the `EKF` node, the `IMU` launch n
 
 To launch the robot in a `mapping` mode in order to create a map of the environment, you will use the `navigation_bringup` launch file in the `scout_mini_control` directory and pass in the `slam` argument.
 ```
-ros2 launch scout_mini_control navigation_bringup slam:=true
+ros2 launch scout_mini_control navigation_bringup.launch.py slam:=true
 ```
 
 This will launch the robot in a mapping mode. You can now manually drive the robot around it's environment to create a map.
@@ -107,7 +107,7 @@ my_map.yaml file which contains details about the resolution of the map.
 
 If you have already created the map above, or have a map of your environment, you can launch the robot into `localization` mode and pass in that map file. That is done using the `navigation_bringup` launch file and passing through the `map` parameter.
 ```
-ros2 launch scout_mini_control navigation_bringup map:=<PATH_TO_MAP_FILE>
+ros2 launch scout_mini_control navigation_bringup.launch.py map:=<PATH_TO_MAP_FILE>
 ```
 
 
