@@ -97,7 +97,7 @@ def generate_launch_description():
             ])
         ]),
         launch_arguments={
-            'namespace': 'scout_mini',
+            'namespace': 'scout_mini/rtabmap',
             'use_sim_time' : use_sim_time,
             'rtabmap_args' : rtabmap_args,
             'database_path' : database_path,
@@ -107,6 +107,7 @@ def generate_launch_description():
             'frame_id' : 'base_footprint',
             'approx_sync' : 'false',
             'wait_imu_to_init' : 'false',
+            'wait_for_transform' : '0.3',
             'imu_topic' : '/scout_mini/zed_node/imu/data',
             'odom_frame_id' : 'odom',
             'qos' : '1',

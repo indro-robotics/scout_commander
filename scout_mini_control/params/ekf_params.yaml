@@ -36,7 +36,7 @@
                         base_link_frame: base_footprint # Defaults to "base_link" if unspecified
                         world_frame: odom # Defaults to the value of odom_frame if unspecified
 
-                        odom0: zed_node/odom # ZED Camera Odometry
+                        odom0: rtabmap/odom # RTABMap Odometry
                         odom0_config:
                                 [
                                         true, true, true,
