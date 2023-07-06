@@ -35,16 +35,17 @@ def generate_launch_description():
 
     # Create the launch configuration variables
     ekf_params = LaunchConfiguration('ekf_params')
-    namespace = LaunchConfiguration('namespace')
+    namespace='scout_mini'
+    # namespace = LaunchConfiguration('namespace')
     localization = LaunchConfiguration('localization')
     use_sim_time = LaunchConfiguration('use_sim_time')
     database_path = LaunchConfiguration('database_path')
     # Declaring Launch Arguments
-    declare_namespace_cmd = DeclareLaunchArgument(
-        'namespace',
-        default_value='scout_mini',
-        description='Namespace to use with nodes'
-    )
+    # declare_namespace_cmd = DeclareLaunchArgument(
+    #     'namespace',
+    #     default_value='',
+    #     description='Namespace to use with nodes'
+    # )
     declare_ekf_params = DeclareLaunchArgument(
         'ekf_params',
         default_value=os.path.join(scout_mini_control_dir, 'params','ekf_params.yaml'),
@@ -196,7 +197,7 @@ def generate_launch_description():
     ld = LaunchDescription()
     # Adding arguments
     ld.add_action(declare_ekf_params)
-    ld.add_action(declare_namespace_cmd)
+    #ld.add_action(declare_namespace_cmd)
     ld.add_action(declare_localization_cmd)
     ld.add_action(declare_use_sim_time_cmd)
     ld.add_action(declare_database_path_cmd)
