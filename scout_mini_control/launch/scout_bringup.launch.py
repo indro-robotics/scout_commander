@@ -26,7 +26,7 @@ def generate_launch_description():
     ekf_params = LaunchConfiguration('ekf_params')
     localization = LaunchConfiguration('localization')
     use_sim_time = LaunchConfiguration('use_sim_time')
-
+    rtabmap_args = LaunchConfiguration('rtabmap_args')
     # Declaring Launch Arguments
     declare_ekf_params = DeclareLaunchArgument(
         'ekf_params',
@@ -44,7 +44,11 @@ def generate_launch_description():
         default_value='false',
         description='Launch in localization mode.'
     )
-
+    declare_rtabmap_args_cmd = DeclareLaunchArgument(
+        'rtabmap_args',
+        default_value='',
+        description='Rtabmap specific args to use'
+    )
     # Robot Description File
     xacro_file = os.path.join(
         scout_mini_description_dir, 'models/scout_mini/xacro', 'scout_mini_tf.xacro')
@@ -88,7 +92,7 @@ def generate_launch_description():
         launch_arguments={
             'namespace': 'scout_mini',
             'use_sim_time' : use_sim_time,
-            'rtabmap_args' : '--delete_db_on_start',
+            'rtabmap_args' : rtabmap_args,
             'rgb_topic' : '/scout_mini/zed_node/rgb/image_rect_color',
             'depth_topic' : '/scout_mini/zed_node/depth/depth_registered',
             'camera_info_topic' : '/scout_mini/zed_node/rgb/camera_info',
@@ -136,6 +140,7 @@ def generate_launch_description():
     ld.add_action(declare_ekf_params)
     ld.add_action(declare_localization_cmd)
     ld.add_action(declare_use_sim_time_cmd)
+    ld.add_action(declare_rtabmap_args_cmd)
 
     # Navigation Nodes
     ld.add_action(robot_localization_node)
