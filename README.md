@@ -97,6 +97,11 @@ ros2 run nav2_map_server map_saver_cli -f my_map
 
 ```
 
+Saving a map from a topic other than `map` use the following syntax:
+```
+ros2 run nav2_map_server map_saver_cli -f <map_name> --ros-args --remap map:=<map_topic>
+```
+
 This command will generate two files:
 
 my_map.pgm image file. Is the map as an occupancy grid image.\n
