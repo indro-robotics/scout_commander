@@ -96,7 +96,7 @@ def generate_launch_description():
             'approx_sync' : 'true',
             'wait_imu_to_init' : 'false',
             'imu_topic' : '/scout_mini/imu/data',
-            'odom_topic' : '/scout_mini/odometry/filtered',
+            'odom_topic' : '/odom',
             'qos' : '2',
             'rtabmapviz' : 'false',
             'rviz' : 'false',
