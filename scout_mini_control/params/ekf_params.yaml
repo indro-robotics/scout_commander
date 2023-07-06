@@ -64,12 +64,3 @@
                         # imu0_relative: false
                         # imu0_queue_size: 10
 
-                        imu1: zed_node/imu/data # ZED Camera IMU
-                        imu1_config:
-                                [
-                                        false, false, false,
-                                        true, true, true,
-                                        false, false, false,
-                                        false, false, false,
-                                        false, false, false,
-                                ]
