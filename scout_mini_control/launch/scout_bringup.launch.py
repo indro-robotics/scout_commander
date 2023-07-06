@@ -27,6 +27,7 @@ def generate_launch_description():
     localization = LaunchConfiguration('localization')
     use_sim_time = LaunchConfiguration('use_sim_time')
     rtabmap_args = LaunchConfiguration('rtabmap_args')
+    database_path = LaunchConfiguration('database_path')
     # Declaring Launch Arguments
     declare_ekf_params = DeclareLaunchArgument(
         'ekf_params',
@@ -48,6 +49,12 @@ def generate_launch_description():
         'rtabmap_args',
         default_value='',
         description='Rtabmap specific args to use'
+    )
+    
+    declare_database_path_cmd = DeclareLaunchArgument(
+        'database_path',
+        default_value=os.path.join(scout_mini_control_dir, 'maps', 'rtabmap.db'),
+        description= 'Where the map is saved and loaded'
     )
     # Robot Description File
     xacro_file = os.path.join(
@@ -93,6 +100,7 @@ def generate_launch_description():
             'namespace': 'scout_mini',
             'use_sim_time' : use_sim_time,
             'rtabmap_args' : rtabmap_args,
+            'database_path' : database_path,
             'rgb_topic' : '/scout_mini/zed_node/rgb/image_rect_color',
             'depth_topic' : '/scout_mini/zed_node/depth/depth_registered',
             'camera_info_topic' : '/scout_mini/zed_node/rgb/camera_info',
@@ -141,6 +149,7 @@ def generate_launch_description():
     ld.add_action(declare_localization_cmd)
     ld.add_action(declare_use_sim_time_cmd)
     ld.add_action(declare_rtabmap_args_cmd)
+    ld.add_action(declare_database_path_cmd)
 
     # Navigation Nodes
     ld.add_action(robot_localization_node)
