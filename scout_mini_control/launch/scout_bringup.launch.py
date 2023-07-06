@@ -86,7 +86,7 @@ def generate_launch_description():
             ])
         ]),
         launch_arguments={
-            'namespace': 'scout_mini/rtabmap',
+            'namespace': 'scout_mini',
             'use_sim_time' : use_sim_time,
             'rtabmap_args' : '--delete_db_on_start',
             'rgb_topic' : '/scout_mini/zed_node/rgb/image_rect_color',
