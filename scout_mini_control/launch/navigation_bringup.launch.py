@@ -109,27 +109,27 @@ def generate_launch_description():
             remappings=remappings,
             output='screen'),
 
-        IncludeLaunchDescription(
-            PythonLaunchDescriptionSource(os.path.join(scout_mini_control_dir, 'launch','include', 'slam.launch.py')),
-            condition=IfCondition(slam),
-            launch_arguments={'namespace': namespace,
-                              'use_sim_time': use_sim_time,
-                              'autostart': autostart,
-                              'use_respawn': use_respawn,
-                              'params_file': params_file}.items()),
+        # IncludeLaunchDescription(
+        #     PythonLaunchDescriptionSource(os.path.join(scout_mini_control_dir, 'launch','include', 'slam.launch.py')),
+        #     condition=IfCondition(slam),
+        #     launch_arguments={'namespace': namespace,
+        #                       'use_sim_time': use_sim_time,
+        #                       'autostart': autostart,
+        #                       'use_respawn': use_respawn,
+        #                       'params_file': params_file}.items()),
 
-        IncludeLaunchDescription(
-            PythonLaunchDescriptionSource(os.path.join(scout_mini_control_dir, 'launch', 'include',
-                                                       'localization.launch.py')),
-            condition=IfCondition(PythonExpression(['not ', slam])),
-            launch_arguments={'namespace': namespace,
-                              'map': map_yaml_file,
-                              'use_sim_time': use_sim_time,
-                              'autostart': autostart,
-                              'params_file': params_file,
-                              'use_composition': use_composition,
-                              'use_respawn': use_respawn,
-                              'container_name': 'nav2_container'}.items()),
+        # IncludeLaunchDescription(
+        #     PythonLaunchDescriptionSource(os.path.join(scout_mini_control_dir, 'launch', 'include',
+        #                                                'localization.launch.py')),
+        #     condition=IfCondition(PythonExpression(['not ', slam])),
+        #     launch_arguments={'namespace': namespace,
+        #                       'map': map_yaml_file,
+        #                       'use_sim_time': use_sim_time,
+        #                       'autostart': autostart,
+        #                       'params_file': params_file,
+        #                       'use_composition': use_composition,
+        #                       'use_respawn': use_respawn,
+        #                       'container_name': 'nav2_container'}.items()),
 
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(os.path.join(scout_mini_control_dir, 'launch', 'include','navigation.launch.py')),
@@ -151,8 +151,8 @@ def generate_launch_description():
     # Declare the launch options
     ld.add_action(declare_namespace_cmd)
     ld.add_action(declare_use_namespace_cmd)
-    ld.add_action(declare_slam_cmd)
-    ld.add_action(declare_map_yaml_cmd)
+    #ld.add_action(declare_slam_cmd)
+    #ld.add_action(declare_map_yaml_cmd)
     ld.add_action(declare_use_sim_time_cmd)
     ld.add_action(declare_params_file_cmd)
     ld.add_action(declare_autostart_cmd)
