@@ -33,4 +33,10 @@
         <parent link="commander_slim_link" />
         <child link="IMU" />
     </joint>
+    <link name="sensor_wgs84"/>
+    <joint name="microstrain_joint" type="fixed">
+        <origin xyz="0.12975 0.04175 0.123201" rpy="${pi} 0 ${pi/2}" />
+        <parent link="commander_slim_link" />
+        <child link="sensor_wgs84" />
+    </joint>
 </robot>

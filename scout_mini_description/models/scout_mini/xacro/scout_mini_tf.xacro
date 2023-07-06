@@ -44,6 +44,7 @@
             </geometry>
         </collision>
     </link>
+
     <link name="inertial_link">
         <inertial>
             <mass value="60" />
