@@ -53,7 +53,7 @@ Due to ROS version limitations with Jetson NX computers, the ZED2 camera node is
 #### **NATIVE FOXY** 
 From the native `FOXY` installation, we are going to launch the `zed_wrapper` node that publishes all the needed ZED2 camera topics. The SDK and wrapper are already installed on the Jetson. Launch the ZED2 camera node using the following `ros2 launch` command:
 ```
-ros2 launch zed_wrapper zed2.launch.py base_frame:=base_footprint publish_tf:=true cam_pose:=[0.277812,0.0,0.176212,0.0,0.0,0.0] camera_name:=scout_mini
+ros2 launch zed_wrapper zed2.launch.py base_frame:=base_footprint publish_tf:=true publish_map_tf:=false cam_pose:=[0.277812,0.0,0.176212,0.0,0.0,0.0] camera_name:=scout_mini
 ```
 This should bringup all the required topics. 
 #### **HUMBLE CONTAINER**
