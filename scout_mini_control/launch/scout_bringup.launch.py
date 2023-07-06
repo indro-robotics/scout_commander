@@ -93,13 +93,14 @@ def generate_launch_description():
                 name='robot_state_publisher',
                 parameters=[robot_description_param]),
 
-            Node(
-                package='robot_localization',
-                executable='ekf_node',
-                name='ekf_filter_node',
-                output='screen',
-                parameters=[ekf_params]),
-            
+            # Node(
+            #     package='robot_localization',
+            #     executable='ekf_node',
+            #     name='ekf_filter_node',
+            #     output='screen',
+            #     parameters=[ekf_params]),
+            #EKF NODE HAS BEEN CAUSING BAD DRIFTING PROBLEMS
+
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource([
                     PathJoinSubstitution([
@@ -146,12 +147,13 @@ def generate_launch_description():
                 name='robot_state_publisher',
                 parameters=[robot_description_param]),
 
-            Node(
-                package='robot_localization',
-                executable='ekf_node',
-                name='ekf_filter_node',
-                output='screen',
-                parameters=[ekf_params]),
+            # Node(
+            #     package='robot_localization',
+            #     executable='ekf_node',
+            #     name='ekf_filter_node',
+            #     output='screen',
+            #     parameters=[ekf_params]),
+            # EKF NODE HAS BEEN CREATING BAD DRIFING PROBLEMS
             
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource([
