@@ -420,7 +420,7 @@ global_costmap:
       update_frequency: 1.0
       publish_frequency: 1.0
       global_frame: map
-      map_topic: scout_mini/map
+      map_topic: /scout_mini/map
       robot_base_frame: base_footprint
       use_sim_time: False
       footprint: "[ [0.325, 0.375], [0.325, -0.375], [-0.325,-0.375], [-0.325,0.375] ]"
