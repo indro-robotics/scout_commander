@@ -108,7 +108,7 @@ def generate_launch_description():
                         'launch', 'rtabmap.launch.py',
                     ])]),
                 launch_arguments={
-                    'namespace': namespace,
+                    # 'namespace': namespace,
                     'use_sim_time' : use_sim_time,
                     'rtabmap_args' : '--delete_db_on_start',
                     'database_path' : database_path,
@@ -165,7 +165,7 @@ def generate_launch_description():
                         'launch', 'rtabmap.launch.py',
                     ])]),
                 launch_arguments={
-                    'namespace': namespace,
+                    # 'namespace': namespace,
                     'use_sim_time' : use_sim_time,
                     'rtabmap_args' : '',
                     'database_path' : database_path,
