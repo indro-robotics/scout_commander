@@ -77,18 +77,6 @@ def generate_launch_description():
     robot_description = robot_description_config.toxml()
     robot_description_param = {'robot_description': robot_description}
 
-
-    ld = LaunchDescription()
-    # Robot Description Launch
-
-    # robot_state_publisher_node = Node(
-    #     package='robot_state_publisher',
-    #     executable='robot_state_publisher',
-    #     name='robot_state_publisher',
-    #     namespace='/scout_mini',
-    #     parameters=[robot_description_param],
-    # )
-
     # Navigation Launch
 
     slam_include = GroupAction(
@@ -204,59 +192,8 @@ def generate_launch_description():
                         'namespace': namespace}.items())
             ]
         )
-    
-    # robot_localization_node = Node(
-    #     package='robot_localization',
-    #     executable='ekf_node',
-    #     name='ekf_filter_node',
-    #     output='screen',
-    #     namespace='/scout_mini',
-    #     parameters=[ekf_params]
-    # )
 
-    # rtabmap_launch = IncludeLaunchDescription(
-    #     PythonLaunchDescriptionSource([
-    #         PathJoinSubstitution([
-    #             FindPackageShare('rtabmap_launch'),
-    #             'launch', 'rtabmap.launch.py',
-    #         ])
-    #         ]),
-    #         launch_arguments={
-    #             'namespace': 'scout_mini/rtabmap',
-    #             'use_sim_time' : use_sim_time,
-    #             'rtabmap_args' : rtabmap_args,
-    #             'database_path' : database_path,
-    #             'rgb_topic' : '/scout_mini/zed_node/rgb/image_rect_color',
-    #             'depth_topic' : '/scout_mini/zed_node/depth/depth_registered',
-    #             'camera_info_topic' : '/scout_mini/zed_node/rgb/camera_info',
-    #             'frame_id' : 'base_footprint',
-    #             'approx_sync' : 'false',
-    #             'wait_imu_to_init' : 'false',
-    #             'wait_for_transform' : '0.3',
-    #             'imu_topic' : '/scout_mini/zed_node/imu/data',
-    #             'odom_frame_id' : 'odom',
-    #             'qos' : '1',
-    #             'rtabmapviz' : 'false',
-    #             'rviz' : 'false',
-    #             'localization' : localization,
-    #         }.items(),
-    # )
-
-    # Sensor Launch
-
-    # microstrain_imu_launch = IncludeLaunchDescription(
-    #     PythonLaunchDescriptionSource([
-    #         PathJoinSubstitution([
-    #             FindPackageShare('microstrain_inertial_driver'),
-    #             'launch', 'microstrain_launch.py',
-    #         ])
-    #     ]),
-    #     launch_arguments={
-    #         'namespace': 'scout_mini',
-    #     }.items(),
-    # )
-
-
+    ld = LaunchDescription()
     # Adding arguments
     ld.add_action(declare_ekf_params)
     ld.add_action(declare_namespace_cmd)
@@ -267,16 +204,5 @@ def generate_launch_description():
     # Navigation Nodes
     ld.add_action(slam_include)
     ld.add_action(localization_include)
-
-
-    #ld.add_action(robot_localization_node)
-    #ld.add_action(rtabmap_launch)
-
-    # Robot TF Launch
-    #ld.add_action(robot_state_publisher_node)
-
-    # Sensor launch
-    #ld.add_action(microstrain_imu_launch)
-    # ld.add_action(depthimage_to_laserscan_launch)
 
     return ld
