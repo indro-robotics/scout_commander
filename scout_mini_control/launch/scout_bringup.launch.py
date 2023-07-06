@@ -16,27 +16,48 @@ from launch.substitutions import LaunchConfiguration
 
 def generate_launch_description():
 
-    ld = LaunchDescription()
-
-    scout_mini_control_pkg = get_package_share_directory(
+    # Get required directories
+    scout_mini_control_dir = get_package_share_directory(
         'scout_mini_control')
-    scout_mini_description_pkg = get_package_share_directory(
+    scout_mini_description_dir = get_package_share_directory(
         'scout_mini_description')
 
-    ekf_config = os.path.join(scout_mini_control_pkg, 'params/ekf_params.yaml')
+    # Create the launch configuration variables
+    ekf_params = LaunchConfiguration('ekf_params')
+    localization = LaunchConfiguration('localization')
+    use_sim_time = LaunchConfiguration('use_sim_time')
 
-    sim_time_argument = DeclareLaunchArgument(name='use_sim_time', default_value='False',
-                                              description='Flag to enable use_sim_time')
+    # Declaring Launch Arguments
+    declare_ekf_params = DeclareLaunchArgument(
+        'ekf_params',
+        default_value=os.path.join(scout_mini_control_dir, 'params','ekf_params.yaml'),
+        description='File path to EKF_Node parameters',
+    )
+
+    declare_use_sim_time_cmd = DeclareLaunchArgument(
+        'use_sim_time',
+        default_value='false',
+        description='Use simulation (Gazebo) clock if true')
+    
+    declare_localization_cmd = DeclareLaunchArgument(
+        'localization',
+        default_value='false',
+        description='Launch in localization mode.'
+    )
 
     # Robot Description File
     xacro_file = os.path.join(
-        scout_mini_description_pkg, 'models/scout_mini/xacro', 'scout_mini_tf.xacro')
+        scout_mini_description_dir, 'models/scout_mini/xacro', 'scout_mini_tf.xacro')
     assert os.path.exists(
         xacro_file), "The scout_mini_tf.xacro doesn't exist in " + str(xacro_file)
 
     robot_description_config = xacro.process_file(xacro_file)
     robot_description = robot_description_config.toxml()
     robot_description_param = {'robot_description': robot_description}
+
+
+    ld = LaunchDescription()
+    # Robot Description Launch
 
     robot_state_publisher_node = Node(
         package='robot_state_publisher',
@@ -45,6 +66,8 @@ def generate_launch_description():
         namespace='/scout_mini',
         parameters=[robot_description_param],
     )
+
+    # Navigation Launch
     
     robot_localization_node = Node(
         package='robot_localization',
@@ -52,10 +75,37 @@ def generate_launch_description():
         name='ekf_filter_node',
         output='screen',
         namespace='/scout_mini',
-        parameters=[ekf_config]
+        parameters=[ekf_params]
     )
 
-    IMU_launch = IncludeLaunchDescription(
+    rtabmap_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([
+            PathJoinSubstitution([
+                FindPackageShare('rtabmap_launch'),
+                'launch', 'rtabmap.launch.py',
+            ])
+        ]),
+        launch_arguments={
+            'namespace': 'scout_mini/rtabmap',
+            'use_sim_time' : use_sim_time,
+            'rtabmap_args' : '--delete_db_on_start',
+            'rgb_topic' : '/scout_mini/zed_node/rgb/image_rect_color',
+            'depth_topic' : '/scout_mini/zed_node/depth/depth_registered',
+            'camera_info_topic' : '/scout_mini/zed_node/rgb/camera_info',
+            'frame_id' : 'base_footprint',
+            'approx_sync' : 'false',
+            'wait_imu_to_init' : 'true',
+            'imu_topic' : '/scout_mini/imu/data',
+            'qos' : '1',
+            'rtabmapviz' : 'false',
+            'rviz' : 'false',
+            'localization' : localization,
+        }.items(),
+    )
+
+    # Sensor Launch
+
+    microstrain_imu_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([
             PathJoinSubstitution([
                 FindPackageShare('microstrain_inertial_driver'),
@@ -82,16 +132,19 @@ def generate_launch_description():
     )
 
     # Adding arguments
+    ld.add_action(declare_ekf_params)
+    ld.add_action(declare_localization_cmd)
+    ld.add_action(declare_use_sim_time_cmd)
 
-    ld.add_action(sim_time_argument)
     # Navigation Nodes
     ld.add_action(robot_localization_node)
+    ld.add_action(rtabmap_launch)
 
     # Robot TF Launch
     ld.add_action(robot_state_publisher_node)
 
     # Sensor launch
-    ld.add_action(IMU_launch)
+    ld.add_action(microstrain_imu_launch)
     ld.add_action(depthimage_to_laserscan_launch)
 
     return ld
