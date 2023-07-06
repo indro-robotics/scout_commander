@@ -91,7 +91,6 @@ def generate_launch_description():
                 package='robot_state_publisher',
                 executable='robot_state_publisher',
                 name='robot_state_publisher',
-                namespace=namespace,
                 parameters=[robot_description_param]),
 
             Node(
@@ -99,7 +98,6 @@ def generate_launch_description():
                 executable='ekf_node',
                 name='ekf_filter_node',
                 output='screen',
-                namespace=namespace,
                 parameters=[ekf_params]),
             
             IncludeLaunchDescription(
@@ -131,9 +129,7 @@ def generate_launch_description():
                 PythonLaunchDescriptionSource([
                     PathJoinSubstitution([
                         FindPackageShare('microstrain_inertial_driver'),
-                        'launch', 'microstrain_launch.py'])]),
-                    launch_arguments={
-                        'namespace': namespace}.items())
+                        'launch', 'microstrain_launch.py'])]))
             ]
         )
     
@@ -148,7 +144,6 @@ def generate_launch_description():
                 package='robot_state_publisher',
                 executable='robot_state_publisher',
                 name='robot_state_publisher',
-                namespace=namespace,
                 parameters=[robot_description_param]),
 
             Node(
@@ -156,7 +151,6 @@ def generate_launch_description():
                 executable='ekf_node',
                 name='ekf_filter_node',
                 output='screen',
-                namespace=namespace,
                 parameters=[ekf_params]),
             
             IncludeLaunchDescription(
@@ -188,9 +182,7 @@ def generate_launch_description():
                 PythonLaunchDescriptionSource([
                     PathJoinSubstitution([
                         FindPackageShare('microstrain_inertial_driver'),
-                        'launch', 'microstrain_launch.py'])]),
-                    launch_arguments={
-                        'namespace': namespace}.items())
+                        'launch', 'microstrain_launch.py'])])),
             ]
         )
 
