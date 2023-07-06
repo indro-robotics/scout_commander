@@ -93,7 +93,7 @@ def generate_launch_description():
             'depth_topic' : '/scout_mini/zed_node/depth/depth_registered',
             'camera_info_topic' : '/scout_mini/zed_node/rgb/camera_info',
             'frame_id' : 'base_footprint',
-            'approx_sync' : 'true',
+            'approx_sync' : 'false',
             'wait_imu_to_init' : 'false',
             'imu_topic' : '/scout_mini/imu/data',
             'odom_topic' : 'odom',
