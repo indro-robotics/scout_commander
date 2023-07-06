@@ -10,7 +10,7 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import PathJoinSubstitution, TextSubstitution
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
-from launch.conditions import IfCondition, UnlessCondition
+from launch.conditions import IfCondition, UnlessCondition, LaunchConfigurationEquals, LaunchConfigurationNotEquals
 from launch.substitutions import LaunchConfiguration
 
 
@@ -92,7 +92,7 @@ def generate_launch_description():
     # Navigation Launch
 
     slam_include = GroupAction(
-        condition=IfCondition(PythonExpression(['not', localization])),
+        condition=LaunchConfigurationNotEquals('localization','true'),
         actions=[
             PushRosNamespace(
                 namespace=namespace),
@@ -149,7 +149,7 @@ def generate_launch_description():
         )
     
     localization_include = GroupAction(
-        condition=IfCondition(localization),
+        condition=LaunchConfigurationEquals('localization', 'true'),
         actions=[
             PushRosNamespace(
                 namespace=namespace),
