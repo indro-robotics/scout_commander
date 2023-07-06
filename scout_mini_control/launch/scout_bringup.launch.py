@@ -107,7 +107,7 @@ def generate_launch_description():
             'frame_id' : 'base_footprint',
             'approx_sync' : 'false',
             'wait_imu_to_init' : 'false',
-            'imu_topic' : '/scout_mini/imu/data',
+            'imu_topic' : '/scout_mini/zed_node/imu/data',
             'odom_frame_id' : 'odom',
             'qos' : '1',
             'rtabmapviz' : 'false',
