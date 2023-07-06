@@ -152,7 +152,7 @@ def generate_launch_description():
     ld.add_action(declare_database_path_cmd)
 
     # Navigation Nodes
-    ld.add_action(robot_localization_node)
+    #ld.add_action(robot_localization_node)
     ld.add_action(rtabmap_launch)
 
     # Robot TF Launch
