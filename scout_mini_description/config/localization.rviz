@@ -6,10 +6,13 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
+        - /TF1
+        - /TF1/Frames1
         - /Polygon1
         - /Path1
-        - /OctoMap1
         - /OctoMap1/Topic1
+        - /STOP_POLYGON1
+        - /SLOWDOWN_POLYGON1
       Splitter Ratio: 0.5
     Tree Height: 566
   - Class: rviz_common/Selection
@@ -90,7 +93,7 @@ Visualization Manager:
       Name: TF
       Show Arrows: true
       Show Axes: true
-      Show Names: false
+      Show Names: true
       Tree:
         map:
           odom:
@@ -319,7 +322,7 @@ Visualization Manager:
       Class: rviz_default_plugins/Map
       Color Scheme: map
       Draw Behind: false
-      Enabled: true
+      Enabled: false
       Name: OctoMap
       Topic:
         Depth: 5
@@ -335,6 +338,32 @@ Visualization Manager:
         Reliability Policy: Reliable
         Value: /scout_mini/rtabmap/octomap_grid_updates
       Use Timestamp: false
+      Value: false
+    - Alpha: 1
+      Class: rviz_default_plugins/Polygon
+      Color: 25; 255; 0
+      Enabled: true
+      Name: STOP_POLYGON
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        Filter size: 10
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /scout_mini/polygon_stop
+      Value: true
+    - Alpha: 1
+      Class: rviz_default_plugins/Polygon
+      Color: 25; 255; 0
+      Enabled: true
+      Name: SLOWDOWN_POLYGON
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        Filter size: 10
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /scout_mini/polygon_slowdown
       Value: true
   Enabled: true
   Global Options:
@@ -382,25 +411,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 18.282976150512695
+      Distance: 16.86410140991211
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 3.4066741466522217
-        Y: 3.19089937210083
-        Z: -2.997823476791382
+        X: 0.5693821310997009
+        Y: -1.6747959852218628
+        Z: -1.7786200046539307
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.674796998500824
+      Pitch: 1.5697963237762451
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz_default_plugins)
-      Yaw: 3.802382707595825
+      Yaw: 4.3524041175842285
     Saved: ~
 Window Geometry:
   Displays:
