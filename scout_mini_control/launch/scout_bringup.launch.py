@@ -40,6 +40,7 @@ def generate_launch_description():
     localization = LaunchConfiguration('localization')
     use_sim_time = LaunchConfiguration('use_sim_time')
     database_path = LaunchConfiguration('database_path')
+    rtabmap_args = LaunchConfiguration('rtabmap_args')
     # Declaring Launch Arguments
     # declare_namespace_cmd = DeclareLaunchArgument(
     #     'namespace',
@@ -65,8 +66,14 @@ def generate_launch_description():
     
     declare_database_path_cmd = DeclareLaunchArgument(
         'database_path',
-        default_value=os.path.join(scout_mini_control_dir, 'maps', 'rtabmap.db'),
+        default_value='/home/indro/colcon_ws/src/scout_commander/scout_mini_control/maps/rtabmap.db',
         description= 'Where the map is saved and loaded'
+    )
+
+    declare_rtabmap_args_cmd = DeclareLaunchArgument(
+        'rtabmap_args',
+        default_value='',
+        description= 'RTABMap specific args to pass through (ex. --delete_db_on_start)'
     )
     # Robot Description File
     xacro_file = os.path.join(
@@ -110,7 +117,7 @@ def generate_launch_description():
                 launch_arguments={
                     # 'namespace': namespace,
                     'use_sim_time' : use_sim_time,
-                    'rtabmap_args' : '--delete_db_on_start',
+                    'rtabmap_args' : rtabmap_args,
                     'database_path' : database_path,
                     'rgb_topic' : '/scout_mini/zed_node/rgb/image_rect_color',
                     'depth_topic' : '/scout_mini/zed_node/depth/depth_registered',
@@ -164,7 +171,7 @@ def generate_launch_description():
                 launch_arguments={
                     # 'namespace': namespace,
                     'use_sim_time' : use_sim_time,
-                    'rtabmap_args' : '',
+                    'rtabmap_args' : rtabmap_args,
                     'database_path' : database_path,
                     'rgb_topic' : '/scout_mini/zed_node/rgb/image_rect_color',
                     'depth_topic' : '/scout_mini/zed_node/depth/depth_registered',
@@ -172,7 +179,7 @@ def generate_launch_description():
                     'frame_id' : 'base_footprint',
                     'approx_sync' : 'false',
                     'wait_imu_to_init' : 'false',
-                    'wait_for_transform' : '0.3',
+                    'wait_for_transform' : '0.01',
                     'imu_topic' : '/scout_mini/zed_node/imu/data',
                     'odom_frame_id' : 'odom',
                     'qos' : '1',
@@ -191,6 +198,7 @@ def generate_launch_description():
     ld = LaunchDescription()
     # Adding arguments
     ld.add_action(declare_ekf_params)
+    ld.add_action(declare_rtabmap_args_cmd)
     #ld.add_action(declare_namespace_cmd)
     ld.add_action(declare_localization_cmd)
     ld.add_action(declare_use_sim_time_cmd)
