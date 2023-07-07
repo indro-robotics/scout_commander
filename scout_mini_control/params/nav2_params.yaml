@@ -175,9 +175,9 @@ planner_server:
       analytic_expansion_max_length: 3.0  # For Hybrid/Lattice nodes: The maximum length of the analytic expansion to be considered valid to prevent unsafe shortcutting (in meters). This should be scaled with minimum turning radius and be no less than 4-5x the minimum radius
       motion_model_for_search: "DUBIN"    # For Hybrid Dubin, Redds-Shepp
       angle_quantization_bins: 72         # For Hybrid nodes: Number of angle bins for search, must be 1 for 2D node (no angle search)
-      minimum_turning_radius: 0.1         # Minimum turning radius in meters of vehicle
+      minimum_turning_radius: 0.3         # Minimum turning radius in meters of vehicle
       reverse_penalty: 2.0                # Heuristic penalty to apply to SE2 node if searching in reverse direction
-      change_penalty: 0.0                 # Heuristic penalty to apply to SE2 node if changing direction
+      change_penalty: 0.3                 # Heuristic penalty to apply to SE2 node if changing direction
       non_straight_penalty: 1.20          # Penalty to apply to SE2 node if searching in non-straight direction
       cost_penalty: 2.0                   # Heuristic penalty to apply to SE2 node for cost at pose
       retrospective_penalty: 0.015        # Heuristic penalty to apply to SE2 node penalty - causes Hybrid-A to prefer later manuevers before earlier ones
@@ -331,8 +331,8 @@ local_costmap:
       plugins: ["voxel_layer", "inflation_layer"]
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
-        cost_scaling_factor: 10.0
-        inflation_radius: 0.35
+        cost_scaling_factor: 0.1
+        inflation_radius: 0.25
       voxel_layer:
         plugin: "nav2_costmap_2d::VoxelLayer"
         enabled: True
@@ -394,8 +394,8 @@ global_costmap:
         map_subscribe_transient_local: True
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
-        cost_scaling_factor: 10.0
-        inflation_radius: 0.175
+        cost_scaling_factor: 0.1
+        inflation_radius: 0.25
       always_send_full_costmap: True
 
   global_costmap_client:
