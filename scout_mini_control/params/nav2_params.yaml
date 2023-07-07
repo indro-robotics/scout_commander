@@ -262,27 +262,6 @@ velocity_smoother:
     deadband_velocity: [0.0, 0.0, 0.0]
     velocity_timeout: 1.0
 
-recoveries_server:
-  ros__parameters:
-    costmap_topic: /local_costmap/costmap_raw
-    footprint_topic: /local_costmap/published_footprint
-    cycle_frequency: 10.0
-    recovery_plugins: ["spin", "back_up", "wait"]
-    spin:
-      plugin: "nav2_recoveries/Spin"
-    back_up:
-      plugin: "nav2_recoveries/BackUp"
-    wait:
-      plugin: "nav2_recoveries/Wait"
-    global_frame: map
-    robot_base_frame: base_footprint
-    transform_timeout: 0.1
-    use_sim_time: false
-    simulate_ahead_time: 2.0
-    max_rotational_vel: 1.0
-    min_rotational_vel: 0.4
-    rotational_acc_lim: 3.2
-
 collision_monitor:
   ros__parameters:
     base_frame_id: "base_footprint"
