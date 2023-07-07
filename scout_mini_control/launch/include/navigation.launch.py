@@ -32,7 +32,10 @@ def generate_launch_description():
                        'behavior_server',
                        'bt_navigator',
                        'waypoint_follower',
-                       'velocity_smoother']
+                       'velocity_smoother',
+                       'recoveries_server',
+                       'collision_monitor',
+                       ]
 
     remappings = [('/tf', 'tf'),
                   ('/tf_static', 'tf_static')]
@@ -158,7 +161,7 @@ def generate_launch_description():
                 parameters=[configured_params],
                 arguments=['--ros-args', '--log-level', log_level],
                 remappings=remappings +
-                        [('cmd_vel', 'cmd_vel_nav'), ('cmd_vel_smoothed', 'mux/cmd_vel')]),
+                        [('cmd_vel', 'cmd_vel_nav'), ('cmd_vel_smoothed', 'cmd_vel_smoothed')]), # Changed from mux/cmd_vel for collision detection
             Node(
                 package='nav2_lifecycle_manager',
                 executable='lifecycle_manager',

@@ -16,12 +16,11 @@ from nav2_common.launch import RewrittenYaml
 def generate_launch_description():
     # Get the launch directory
     scout_mini_control_dir = get_package_share_directory('scout_mini_control')
+    nav2_collision_monitor_dir = get_package_share_directory('nav2_collision_monitor')
 
     # Create the launch configuration variables
     namespace = LaunchConfiguration('namespace')
     use_namespace = LaunchConfiguration('use_namespace')
-    slam = LaunchConfiguration('slam')
-    map_yaml_file = LaunchConfiguration('map')
     use_sim_time = LaunchConfiguration('use_sim_time')
     params_file = LaunchConfiguration('params_file')
     autostart = LaunchConfiguration('autostart')
@@ -57,16 +56,6 @@ def generate_launch_description():
         default_value='false',
         description='Whether to apply a namespace to the navigation stack')
 
-    declare_slam_cmd = DeclareLaunchArgument(
-        'slam',
-        default_value='False',
-        description='Whether run a SLAM')
-
-    declare_map_yaml_cmd = DeclareLaunchArgument(
-        'map',
-        default_value='',
-        description='Name of map yaml file to use')
-
     declare_use_sim_time_cmd = DeclareLaunchArgument(
         'use_sim_time',
         default_value='false',
@@ -92,7 +81,8 @@ def generate_launch_description():
     declare_log_level_cmd = DeclareLaunchArgument(
         'log_level', default_value='info',
         description='log level')
-
+    
+    # Specify lifecycle_nodes
     # Specify the actions
     bringup_cmd_group = GroupAction([
         PushRosNamespace(
@@ -109,28 +99,6 @@ def generate_launch_description():
             remappings=remappings,
             output='screen'),
 
-        # IncludeLaunchDescription(
-        #     PythonLaunchDescriptionSource(os.path.join(scout_mini_control_dir, 'launch','include', 'slam.launch.py')),
-        #     condition=IfCondition(slam),
-        #     launch_arguments={'namespace': namespace,
-        #                       'use_sim_time': use_sim_time,
-        #                       'autostart': autostart,
-        #                       'use_respawn': use_respawn,
-        #                       'params_file': params_file}.items()),
-
-        # IncludeLaunchDescription(
-        #     PythonLaunchDescriptionSource(os.path.join(scout_mini_control_dir, 'launch', 'include',
-        #                                                'localization.launch.py')),
-        #     condition=IfCondition(PythonExpression(['not ', slam])),
-        #     launch_arguments={'namespace': namespace,
-        #                       'map': map_yaml_file,
-        #                       'use_sim_time': use_sim_time,
-        #                       'autostart': autostart,
-        #                       'params_file': params_file,
-        #                       'use_composition': use_composition,
-        #                       'use_respawn': use_respawn,
-        #                       'container_name': 'nav2_container'}.items()),
-
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(os.path.join(scout_mini_control_dir, 'launch', 'include','navigation.launch.py')),
             launch_arguments={'namespace': namespace,
@@ -138,8 +106,13 @@ def generate_launch_description():
                               'autostart': autostart,
                               'params_file': params_file,
                               'use_composition': use_composition,
-                              'use_respawn': use_respawn,
                               'container_name': 'nav2_container'}.items()),
+
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource(os.path.join(nav2_collision_monitor_dir, 'launch', 'collision_monitor_node.launch.py')),
+            launch_arguments={'namespace': namespace,
+                              'use_sim_time': use_sim_time,
+                              'params_file': params_file}.items()),
     ])
 
     # Create the launch description and populate
