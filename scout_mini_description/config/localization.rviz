@@ -6,13 +6,7 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
-        - /TF1
-        - /TF1/Frames1
-        - /Polygon1
-        - /Path1
         - /OctoMap1/Topic1
-        - /STOP_POLYGON1
-        - /SLOWDOWN_POLYGON1
       Splitter Ratio: 0.5
     Tree Height: 566
   - Class: rviz_common/Selection
@@ -239,7 +233,7 @@ Visualization Manager:
       Class: rviz_default_plugins/Polygon
       Color: 25; 255; 0
       Enabled: true
-      Name: Polygon
+      Name: RobotFootprint
       Topic:
         Depth: 5
         Durability Policy: Volatile
@@ -341,7 +335,7 @@ Visualization Manager:
       Value: false
     - Alpha: 1
       Class: rviz_default_plugins/Polygon
-      Color: 25; 255; 0
+      Color: 224; 27; 36
       Enabled: true
       Name: STOP_POLYGON
       Topic:
@@ -354,7 +348,7 @@ Visualization Manager:
       Value: true
     - Alpha: 1
       Class: rviz_default_plugins/Polygon
-      Color: 25; 255; 0
+      Color: 255; 163; 72
       Enabled: true
       Name: SLOWDOWN_POLYGON
       Topic:
@@ -411,7 +405,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 16.86410140991211
+      Distance: 16.26329803466797
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -426,10 +420,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 1.5697963237762451
+      Pitch: 0.6797971725463867
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz_default_plugins)
-      Yaw: 4.3524041175842285
+      Yaw: 0.9174035787582397
     Saved: ~
 Window Geometry:
   Displays:
