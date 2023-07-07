@@ -266,8 +266,8 @@ collision_monitor:
   ros__parameters:
     base_frame_id: "base_footprint"
     odom_frame_id: "odom"
-    cmd_vel_in_topic: "/cmd_vel_nav"
-    cmd_vel_out_topic: "/mux/cmd_vel" # The output control velocity command
+    cmd_vel_in_topic: "cmd_vel_nav"
+    cmd_vel_out_topic: "mux/cmd_vel" # The output control velocity command
     state_topic: "collision_monitor_state"
     transform_tolerance: 0.1 # Time with which to post-date the transform that is published, to indicate that this transform is valid into the future
     source_timeout: 2.0 #Maximum time interval in which source data is considered as valid
