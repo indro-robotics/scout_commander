@@ -108,11 +108,11 @@ def generate_launch_description():
                               'use_composition': use_composition,
                               'container_name': 'nav2_container'}.items()),
 
-        # IncludeLaunchDescription(
-        #     PythonLaunchDescriptionSource(os.path.join(nav2_collision_monitor_dir, 'launch', 'collision_monitor_node.launch.py')),
-        #     launch_arguments={'namespace': namespace,
-        #                       'use_sim_time': use_sim_time,
-        #                       'params_file': params_file}.items()),
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource(os.path.join(nav2_collision_monitor_dir, 'launch', 'collision_monitor_node.launch.py')),
+            launch_arguments={'namespace': namespace,
+                              'use_sim_time': use_sim_time,
+                              'params_file': params_file}.items()),
     ])
 
     # Create the launch description and populate
