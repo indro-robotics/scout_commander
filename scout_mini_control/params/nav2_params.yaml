@@ -266,8 +266,8 @@ collision_monitor:
   ros__parameters:
     base_frame_id: "base_footprint"
     odom_frame_id: "odom"
-    cmd_vel_in_topic: "cmd_vel_nav"
-    cmd_vel_out_topic: "mux/cmd_vel" # The output control velocity command
+    cmd_vel_in_topic: "/cmd_vel_nav"
+    cmd_vel_out_topic: "/mux/cmd_vel" # The output control velocity command
     state_topic: "collision_monitor_state"
     transform_tolerance: 0.1 # Time with which to post-date the transform that is published, to indicate that this transform is valid into the future
     source_timeout: 2.0 #Maximum time interval in which source data is considered as valid
@@ -276,7 +276,7 @@ collision_monitor:
     polygons: ["PolygonStop", "PolygonSlow", "FootprintApproach"]
     PolygonStop:
       type: "circle"
-      radius: 0.90 # Circle around robot in which to stop
+      radius: 0.850 # Circle around robot in which to stop
       action_type: "stop"
       min_points: 4  # max_points: 3 for Humble
       visualize: True
@@ -327,7 +327,7 @@ local_costmap:
       width: 5
       height: 5
       resolution: 0.05
-      footprint: "[ [0.325, 0.375], [0.325, -0.375], [-0.325,-0.375], [-0.325,0.375] ]"
+      footprint: "[ [0.400, 0.450], [0.400, -0.450], [-0.400,-0.450], [-0.400,0.450] ]"
       plugins: ["voxel_layer", "inflation_layer"]
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
