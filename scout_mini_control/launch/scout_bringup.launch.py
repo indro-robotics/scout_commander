@@ -66,7 +66,7 @@ def generate_launch_description():
     
     declare_database_path_cmd = DeclareLaunchArgument(
         'database_path',
-        default_value=os.path.join(scout_mini_control_dir, 'maps','rtabmap.db'),
+        default_value='/home/indro/colcon_ws/src/scout_commander/scout_mini_control/maps/rtabmap.db',
         description= 'Where the map is saved and loaded'
     )
 
