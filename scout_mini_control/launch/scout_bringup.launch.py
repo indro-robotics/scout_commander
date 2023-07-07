@@ -32,6 +32,7 @@ def generate_launch_description():
         'scout_mini_control')
     scout_mini_description_dir = get_package_share_directory(
         'scout_mini_description')
+    
 
     # Create the launch configuration variables
     ekf_params = LaunchConfiguration('ekf_params')
