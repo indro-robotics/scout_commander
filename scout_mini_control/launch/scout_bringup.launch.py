@@ -66,7 +66,7 @@ def generate_launch_description():
     
     declare_database_path_cmd = DeclareLaunchArgument(
         'database_path',
-        default_value='/home/indro/colcon_ws/src/scout_commander/scout_mini_control/maps/rtabmap.db',
+        default_value=os.path.join(scout_mini_control_dir, 'maps','rtabmap.db'),
         description= 'Where the map is saved and loaded'
     )
 
@@ -125,7 +125,7 @@ def generate_launch_description():
                     'frame_id' : 'base_footprint',
                     'approx_sync' : 'false',
                     'wait_imu_to_init' : 'false',
-                    'wait_for_transform' : '0.01',
+                    'wait_for_transform' : '0.1',
                     'imu_topic' : '/scout_mini/zed_node/imu/data',
                     'odom_frame_id' : 'odom',
                     'qos' : '1',
@@ -179,7 +179,7 @@ def generate_launch_description():
                     'frame_id' : 'base_footprint',
                     'approx_sync' : 'false',
                     'wait_imu_to_init' : 'false',
-                    'wait_for_transform' : '0.01',
+                    'wait_for_transform' : '0.1',
                     'imu_topic' : '/scout_mini/zed_node/imu/data',
                     'odom_frame_id' : 'odom',
                     'qos' : '1',
