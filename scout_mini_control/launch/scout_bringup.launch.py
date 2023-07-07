@@ -137,7 +137,13 @@ def generate_launch_description():
                 PythonLaunchDescriptionSource([
                     PathJoinSubstitution([
                         FindPackageShare('microstrain_inertial_driver'),
-                        'launch', 'microstrain_launch.py'])]))
+                        'launch', 'microstrain_launch.py'])])),
+
+            IncludeLaunchDescription(
+                PythonLaunchDescriptionSource([
+                    PathJoinSubstitution([
+                        FindPackageShare('scout_mini_control'),
+                        'launch', 'navigation_bringup.launch.py'])]))
             ]
         )
     
@@ -192,6 +198,12 @@ def generate_launch_description():
                     PathJoinSubstitution([
                         FindPackageShare('microstrain_inertial_driver'),
                         'launch', 'microstrain_launch.py'])])),
+                        
+            IncludeLaunchDescription(
+                PythonLaunchDescriptionSource([
+                    PathJoinSubstitution([
+                        FindPackageShare('scout_mini_control'),
+                        'launch', 'navigation_bringup.launch.py'])]))
             ]
         )
 
