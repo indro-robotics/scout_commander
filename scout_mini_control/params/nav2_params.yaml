@@ -310,7 +310,7 @@ collision_monitor:
 
     pointcloud:
       type: "pointcloud"
-      topic: "/scout_mini/rtabmap/local_grid_obstacle"
+      topic: "scout_mini/zed_node/point_cloud/cloud_registered"
       min_height: 0.1
       max_height: 0.65
 
