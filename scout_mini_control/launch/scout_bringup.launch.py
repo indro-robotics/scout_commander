@@ -109,7 +109,7 @@ def generate_launch_description():
             #     parameters=[ekf_params]),
             #EKF NODE HAS BEEN CAUSING BAD DRIFTING PROBLEMS
 
-            IncludeLaunchDescription(
+            IncludeLaunchDescription(asdfasd
                 PythonLaunchDescriptionSource([
                     PathJoinSubstitution([
                         FindPackageShare('rtabmap_launch'),
