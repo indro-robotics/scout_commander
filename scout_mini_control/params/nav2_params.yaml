@@ -168,17 +168,17 @@ planner_server:
       downsample_costmap: false           # whether or not to downsample the map
       downsampling_factor: 1              # multiplier for the resolution of the costmap layer (e.g. 2 on a 5cm costmap would be 10cm)
       allow_unknown: true                 # allow traveling in unknown space
-      tolerance: 0.25                     # tolerance for planning if unable to reach exact pose, in meters
+      tolerance: 0.3                    # tolerance for planning if unable to reach exact pose, in meters
       max_iterations: 1000000             # maximum total iterations to search for before failing (in case unreachable), set to -1 to disable
       max_on_approach_iterations: 1000    # maximum number of iterations to attempt to reach goal once in tolerance
       max_planning_time: 5.0              # max time in s for planner to plan, smooth, and upsample. Will scale maximum smoothing and upsampling times based on remaining time after planning.
       analytic_expansion_max_length: 3.0  # For Hybrid/Lattice nodes: The maximum length of the analytic expansion to be considered valid to prevent unsafe shortcutting (in meters). This should be scaled with minimum turning radius and be no less than 4-5x the minimum radius
       motion_model_for_search: "DUBIN"    # For Hybrid Dubin, Redds-Shepp
       angle_quantization_bins: 72         # For Hybrid nodes: Number of angle bins for search, must be 1 for 2D node (no angle search)
-      minimum_turning_radius: 0.3         # Minimum turning radius in meters of vehicle
+      minimum_turning_radius: 0.075         # Minimum turning radius in meters of vehicle
       reverse_penalty: 2.0                # Heuristic penalty to apply to SE2 node if searching in reverse direction
       change_penalty: 0.3                 # Heuristic penalty to apply to SE2 node if changing direction
-      non_straight_penalty: 1.20          # Penalty to apply to SE2 node if searching in non-straight direction
+      non_straight_penalty: 1.5          # Penalty to apply to SE2 node if searching in non-straight direction
       cost_penalty: 2.0                   # Heuristic penalty to apply to SE2 node for cost at pose
       retrospective_penalty: 0.015        # Heuristic penalty to apply to SE2 node penalty - causes Hybrid-A to prefer later manuevers before earlier ones
       lookup_table_size: 20.0             # Size of the dubin/reeds-sheep distance window to cache, in meters.
@@ -226,7 +226,7 @@ behavior_server:
     local_frame: odom # Maybe change global frame to odom
     global_frame: map
     robot_base_frame: base_footprint
-    transform_tolerance: 0.15
+    transform_tolerance: 0.2
     simulate_ahead_time: 2.0
     max_rotational_vel: 1.0
     min_rotational_vel: 0.4
