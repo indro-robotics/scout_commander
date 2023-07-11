@@ -2,6 +2,7 @@ from setuptools import setup
 import os
 
 package_name = 'scout_mini_control'
+include_package = 'scout_mini_control/include'
 
 data_files = [
     ('share/ament_index/resource_index/packages',
@@ -27,7 +28,7 @@ def package_files(data_files, directory_list):
 setup(
     name=package_name,
     version='0.0.0',
-    packages=[package_name],
+    packages=[package_name, include_package],
     data_files=package_files(data_files, ['launch/', 'models/', 'config/', 'maps/', 'params/']),
     install_requires=['setuptools'],
     zip_safe=True,
@@ -38,7 +39,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'scout_mini_control = scout_mini_control.scout_mini_control:main'
+            'scout_mini_control = scout_mini_control.scout_mini_control:main',
+            'waypoint_follower = scout_mini_control.waypoint_follower:main',
         ],
     },
 )
