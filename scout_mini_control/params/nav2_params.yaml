@@ -222,7 +222,7 @@ planner_server:
         max_iterations: 1000
         w_smooth: 0.3
         w_data: 0.2
-        tolerance: 1.0e-10
+        tolerance: 0.0000000001
         do_refinement: true
         refinement_num: 2
 
