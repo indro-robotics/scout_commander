@@ -5,7 +5,6 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Global Options1
-        - /Status1
       Splitter Ratio: 0.5
     Tree Height: 566
   - Class: rviz_common/Selection
@@ -52,66 +51,13 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: true
-        IMU:
-          Value: true
-        base_footprint:
-          Value: true
-        base_link:
-          Value: true
-        commander_slim_link:
-          Value: true
-        front_left_wheel_link:
-          Value: true
-        front_mount:
-          Value: true
-        front_right_wheel_link:
-          Value: true
-        inertial_link:
-          Value: true
-        map:
-          Value: true
-        odom:
-          Value: true
-        rear_left_wheel_link:
-          Value: true
-        rear_mount:
-          Value: true
-        rear_right_wheel_link:
-          Value: true
-        sensor:
-          Value: true
-        sensor_wgs84:
-          Value: true
       Marker Scale: 1
       Name: TF
       Show Arrows: true
       Show Axes: true
       Show Names: false
       Tree:
-        map:
-          odom:
-            base_footprint:
-              base_link:
-                commander_slim_link:
-                  IMU:
-                    {}
-                  sensor_wgs84:
-                    sensor:
-                      {}
-                front_left_wheel_link:
-                  {}
-                front_mount:
-                  {}
-                front_right_wheel_link:
-                  {}
-                inertial_link:
-                  {}
-                rear_left_wheel_link:
-                  {}
-                rear_mount:
-                  {}
-                rear_right_wheel_link:
-                  {}
+        {}
       Update Interval: 0
       Value: true
     - Alpha: 1
@@ -131,61 +77,7 @@ Visualization Manager:
         Expand Joint Details: false
         Expand Link Details: false
         Expand Tree: false
-        IMU:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
         Link Tree Style: Links in Alphabetic Order
-        base_footprint:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        base_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        commander_slim_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        front_left_wheel_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        front_mount:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        front_right_wheel_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        inertial_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        rear_left_wheel_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        rear_mount:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        rear_right_wheel_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        sensor_wgs84:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
       Mass Properties:
         Inertia: false
         Mass: false
@@ -255,27 +147,6 @@ Visualization Manager:
         History Policy: Keep Last
         Reliability Policy: Reliable
         Value: /scout_mini/rtabmap/octomap_grid_updates
-      Use Timestamp: false
-      Value: true
-    - Alpha: 0.699999988079071
-      Class: rviz_default_plugins/Map
-      Color Scheme: map
-      Draw Behind: false
-      Enabled: true
-      Name: Map
-      Topic:
-        Depth: 5
-        Durability Policy: Volatile
-        Filter size: 10
-        History Policy: Keep Last
-        Reliability Policy: Reliable
-        Value: /global_costmap/costmap
-      Update Topic:
-        Depth: 5
-        Durability Policy: Volatile
-        History Policy: Keep Last
-        Reliability Policy: Reliable
-        Value: /global_costmap/costmap_updates
       Use Timestamp: false
       Value: true
     - Alpha: 1
