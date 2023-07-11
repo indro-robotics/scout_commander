@@ -57,64 +57,61 @@ ros2 launch zed_wrapper zed2.launch.py base_frame:=base_footprint publish_tf:=fa
 ```
 This should bringup all the required topics. 
 #### **HUMBLE CONTAINER**
-From within the humble container we are going to launch the `microstrain_imu` , the `EKF_node`, and the static `TF`.
+From within the humble container we are going to launch the `microstrain_imu` , the static `TF`, and the `rtabmap` node that will handle all of the visual odometry. 
 
- The difference between the Gazebo `TF` and the static `TF` being that no Gazebo sensors or wheel odometry are launched in conjunction. 
+***Note: visual odometry relies on overlapping pointcloud data, large empty spaces will have less reliable odometry than populated environments***
 
-Use the the launch file in the `scout_mini_control` package.
-```
-ros2 launch scout_mini_control scout_bringup.launch.py
-```
+ The difference between the Gazebo `TF` and the static `TF` being that no Gazebo sensors, environments, or wheel odometry simulations are launched in conjunction. Launching this `scout_bringup` for the desired robot mode is explained below.
 
-This node launches the static `TF` publisher, the `EKF` node, the `IMU` launch node, and the `depth_image_to_laserscan` node. The appropriate topics are already set in the configurations and these nodes will publish all the `ROS2 Humble` nodes needed for navigation.
+
 
 ## **Launching the robot in MAPPING mode**
 
-To launch the robot in a `mapping` mode in order to create a map of the environment, you will use the `navigation_bringup` launch file in the `scout_mini_control` directory and pass in the `slam` argument.
-```
-ros2 launch scout_mini_control navigation_bringup.launch.py slam:=true
-```
+To launch the robot in a `mapping` mode in order to create a map of the environment, you will use the `scout_bringup` launch file in the `scout_mini_control` directory. There are several paramaters that can be passed through depending on your mapping requirements.
+- `database_file`: this paramater will set the location and name of the map you are going to generate. The map is saved in the form <MAP_NAME>.db. This is a larger file than a typical `.yaml` file because it includes all the point cloud information needed for visual odometry. 
+- `rtabmap_args`: This passes through specific arguments relevant to rtabmap. The argument most commonly used in this application is the `--delete_db_on_start` argument. This dictates whether to use the existing map at the `database_file` path or to delete that map and begin anew. 
 
-This will launch the robot in a mapping mode. You can now manually drive the robot around it's environment to create a map.
-
-Once ready to save your map, navigate to the `scout_mini_control/maps` folder and use the following command:
-```
-ros2 run nav2_map_server map_saver_cli -f <map_name>
-```
-
-This will save your map into a `<map_name>.yaml` and `<map_name>.pgm` file format.
-
-## **Saving the Map of the surrounding Environment**
-To save the map of the environment, keep the navigation node running, when you are satisfied with the map you are building,
-run this command to save the map. It is better to save the map in the config folder of the scout_commander, because it will
-save the map at the location, where the command is run from
-
-Open a New Terminal (Dont close any running node)
-```
-cd src/scout_commander/scout_mini_control/maps
-
-ros2 run nav2_map_server map_saver_cli -f my_map
+Launching the robot into mapping mode can be done using the command below:
 
 ```
-
-Saving a map from a topic other than `map` use the following syntax:
-```
-ros2 run nav2_map_server map_saver_cli -f <map_name> --ros-args --remap map:=<map_topic>
+ros2 launch scout_mini_control scout_bringup.launch.py rtabmap_args:=--delete_db_on_start database_file:=/home/indro/colcon_ws/src/scout_commander/scout_mini_control/maps/map.db
 ```
 
-This command will generate two files:
+This will launch the robot in a mapping mode. You can now manually drive the robot around it's environment to create a map. 
 
-my_map.pgm image file. Is the map as an occupancy grid image.\n
-my_map.yaml file which contains details about the resolution of the map.
+***Note: launching the `navigation` stack while the robot is in mapping mode is NOT recommended, as localization and path planning simultaneously require a lot of processing power, and your control nodes are much more likely to crash***
+
+This node will automatically save your environment map into your `database_file`, no need to do any external saving. When the node is stopped, the map will be saved.
 
 
-## **Launching robot in LOCALIZATION MODE**
+## **Launching robot in LOCALIZATION mode**
 
-If you have already created the map above, or have a map of your environment, you can launch the robot into `localization` mode and pass in that map file. That is done using the `navigation_bringup` launch file and passing through the `map` parameter.
+If you have already created the map above, or have another database map of your environment, you can launch the robot into `localization` mode and pass in that map file. That is done using the `scout_bringup` launch file and passing through the following arguments:
+- `localization`: this boolean value (true/false) dictates the mode of the robot. The default value of this is `false` to indicate mapping mode.
+- `database_file`: this parameter sets the location and name of the map to use for localization. This value should match the value set during `mapping` mode (If you are planning to use the map you have just created)
+
+Launching the robot into localization mode can be done using the command below:
 ```
-ros2 launch scout_mini_control navigation_bringup.launch.py map:=<PATH_TO_MAP_FILE>
+ros2 launch scout_mini_control scout_bringup.launch.py localization:=true database_file:=/home/indro/colcon_ws/src/scout_commander/scout_mini_control/maps/map.db
+```
+# Launching the NAV2 System
+Once you have launched the robot's bringup file, it will be publishing to the `RobotModel`, `TF`, `odom`, and `map` frames, as well as some other `rtabmap` and sensor topics. To begin using the Navigation system, for path planning, object detection, and future automony, you will launch the navigation stack using the `navigation_bringup` launch file. No arguments need to be passed into this node.
+```
+ros2 launch scout_mini_control navigation_bringup.launch.py
+```
+## Following a set of waypoints
+The navigation system has been set up such that the robot will path plan and then navigate to a series of waypoints given by a **CSV** file. The **CSV** file contains 7 values per row. These values are:
+
+`x_position`, `y_position`, `z_position`, `x_orientation`, `y_orientation`, `z_orientation`, `w_orientation`
+
+An example of this file is given by the `waypoints.txt` file in the `scout_mini_control/maps` directory. 
+
+To command the robot to navigate through the waypoints in your waypoints **CSV**, use the `waypoint_follower` launch file in the `scout_mini_control` directory. 
+```
+ros2 launch scout_mini_control waypoint_follower.launch.py waypoints_file:=<path_to_waypoints_file>
 ```
 
+***Note: this command can be sent via the visualization computer, assuming your robot and station are connected over `CYCLONEDDS`*** 
 
 # Visualizing ROBOT over CYCLONEDDS
 The physical robot is installed with CYCLONEDDS. Assuming appropriate configurations are set, all robot topics should be visible in your local computers ROS environment. To visualize these topics, use the `rviz2.launch.py` file in the `scout_mini_control` package:
