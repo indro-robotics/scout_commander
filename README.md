@@ -114,17 +114,13 @@ ros2 launch scout_mini_control waypoint_follower.launch.py waypoints_file:=<path
 ***Note: this command can be sent via the visualization computer, assuming your robot and station are connected over `CYCLONEDDS`*** 
 
 # Visualizing ROBOT over CYCLONEDDS
-The physical robot is installed with CYCLONEDDS. Assuming appropriate configurations are set, all robot topics should be visible in your local computers ROS environment. To visualize these topics, use the `rviz2.launch.py` file in the `scout_mini_control` package:
+The physical robot is installed with CYCLONEDDS. Assuming appropriate configurations are set, all robot topics should be visible in your local computers ROS environment. To visualize these topics, you can use the RVIZ configuration specific launch file depending on your robot mode.
+
+**To launch in mapping mode:**
 ```
-ros2 launch scout_mini_control rviz2.launch.py
+ros2 launch scout_mini_control rviz2_mapping.launch.py
 ```
-
-This launches RVIZ using the appropriate configuration to visualize all the required nodes. 
-
-
-
-DOCKER COMPOSE UP 
-
-Launch command: ros2 launch scout_base scout_mini_base.launch.py base_frame:=base_footprint
-
-
+**To launch in localization mode:**
+```
+ros2 launch scout_mini_control rviz2_localization.launch.py
+```
