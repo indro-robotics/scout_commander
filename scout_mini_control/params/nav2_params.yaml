@@ -376,7 +376,7 @@ local_costmap:
         mark_threshold: 0
         observation_sources: pointcloud
         pointcloud:
-          topic: /scout_mini/zed_node/point_cloud/cloud_registered # RTABMap node that projects point cloud obstacle
+          topic: /scout_mini/rtabmap/local_grid_obstacle # RTABMap node that projects point cloud obstacle
           data_type: "PointCloud2"
           max_obstacle_height: 2.0
           clearing: True
