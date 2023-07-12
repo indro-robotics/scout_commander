@@ -109,7 +109,7 @@ An example of this file is given by the `waypoints.txt` file in the `scout_mini_
 To command the robot to navigate through the waypoints in your waypoints **CSV**, use the `waypoint_follower` launch file in the `scout_mini_control` directory. 
 ```
 ros2 launch scout_mini_control waypoint_follower.launch.py waypoints_file:=<path_to_waypoints_file>
-```
+```simple bool service interface ros2
 
 ***Note: this command can be sent via the visualization computer, assuming your robot and station are connected over `CYCLONEDDS`*** 
 
@@ -124,3 +124,11 @@ ros2 launch scout_mini_control rviz2_mapping.launch.py
 ```
 ros2 launch scout_mini_control rviz2_localization.launch.py
 ```
+
+# ZED CAMERA DOWNSAMPLING
+
+To make sure that the robot odometry runs fast enough, you must edit the publishing resolution in the `zed_wrapper` `common.yaml` file:
+
+Navigate to `colcon_ws/src/zed-ros2-wrapper/zed_wrapper/config/common.yaml` and then scroll down to the `ros__parameters.general` settings:
+
+Change the `pub_resolution` from MEDIUM to LOW. This 
