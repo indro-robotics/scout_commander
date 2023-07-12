@@ -16,6 +16,7 @@ from ament_index_python.packages import get_package_share_directory
 
 from nav2_msgs.action import FollowWaypoints
 from geometry_msgs.msg import PoseStamped
+from std_srvs.srv import Trigger
 
 from .include.robot_navigator import BasicNavigator,  NavigationResult
 
@@ -31,15 +32,17 @@ class WaypointFollower(Node):
 
 
 
-        
+        self._return_to_home_service = self.create_service(Trigger, 'return_to_home', self.return_to_home_callback)
         self.navigator = BasicNavigator()
+
+        self.waypoints_file = self.get_parameter('waypoints_file').get_parameter_value().string_value
+        self.rth = self.get_parameter('rth').get_parameter_value().bool_value
+        self.home_point = self.get_parameter('home_point').get_parameter_value().double_array_value
 
 
     def send_waypoints(self):
 
-        waypoints_file = self.get_parameter('waypoints_file').get_parameter_value().string_value
-        rth = self.get_parameter('rth').get_parameter_value().bool_value
-        home_point = self.get_parameter('home_point').get_parameter_value().double_array_value
+        
 
         waypoints = pd.read_csv(waypoints_file).to_numpy()
 
@@ -53,8 +56,6 @@ class WaypointFollower(Node):
         or_w = waypoints[:,6]
         
         # home_point = ast.literal_eval(home_point)
-        print(home_point)
-        print('The first value of the home array is: ' + str(home_point[0]))
 
         goal_poses = []
 
@@ -72,18 +73,18 @@ class WaypointFollower(Node):
             goal_poses.append(goal)
 
         # Adding the home initial home point as the final point: 
-        if rth == True:
-            self.get_logger().info('RTH has been set as true: ' + str(home_point[2]) + '\n')
+        if self.rth == True:
+            self.get_logger().info('RTH has been set as true: ' + str(self.home_point[2]) + '\n')
             goal = PoseStamped()
             goal.header.frame_id = 'map'
             goal.header.stamp = self.get_clock().now().to_msg()
-            goal.pose.position.x = home_point[0]
-            goal.pose.position.y = home_point[1]
-            goal.pose.position.z = home_point[2]
-            goal.pose.orientation.x = home_point[3]
-            goal.pose.orientation.y = home_point[4]
-            goal.pose.orientation.z = home_point[5]
-            goal.pose.orientation.w = home_point[6]
+            goal.pose.position.x = self.home_point[0]
+            goal.pose.position.y = self.home_point[1]
+            goal.pose.position.z = self.home_point[2]
+            goal.pose.orientation.x = self.home_point[3]
+            goal.pose.orientation.y = self.home_point[4]
+            goal.pose.orientation.z = self.home_point[5]
+            goal.pose.orientation.w = self.home_point[6]
             goal_poses.append(goal)
 
         nav_start = self.navigator.get_clock().now()
@@ -113,7 +114,31 @@ class WaypointFollower(Node):
             print('Goal has an invalid return status!')
         
         exit(0)
-            
+
+    def return_to_home_callback(self, request, response):
+        self.navigator.cancelNav()
+        self.get_logger().warn('Navigation Cancelled : Return to Home Triggered')
+        response.sucess = 1
+        response.message = 'Returning to home...'
+        goal_poses = []
+        goal = PoseStamped()
+        goal.header.frame_id = 'map'
+        goal.header.stamp = self.get_clock().now().to_msg()
+        goal.pose.position.x = self.home_point[0]
+        goal.pose.position.y = self.home_point[1]
+        goal.pose.position.z = self.home_point[2]
+        goal.pose.orientation.x = self.home_point[3]
+        goal.pose.orientation.y = self.home_point[4]
+        goal.pose.orientation.z = self.home_point[5]
+        goal.pose.orientation.w = self.home_point[6]
+        goal_poses.append(goal)
+
+        self.navigator.followWaypoints(goal_poses)
+
+        return response
+
+
+
 def main():
     rclpy.init()
     waypoint_follower = WaypointFollower()
