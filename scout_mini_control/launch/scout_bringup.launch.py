@@ -33,21 +33,15 @@ def generate_launch_description():
     scout_mini_description_dir = get_package_share_directory(
         'scout_mini_description')
     
-
     # Create the launch configuration variables
     ekf_params = LaunchConfiguration('ekf_params')
     namespace='scout_mini'
-    # namespace = LaunchConfiguration('namespace')
     localization = LaunchConfiguration('localization')
     use_sim_time = LaunchConfiguration('use_sim_time')
     database_path = LaunchConfiguration('database_path')
     rtabmap_args = LaunchConfiguration('rtabmap_args')
+
     # Declaring Launch Arguments
-    # declare_namespace_cmd = DeclareLaunchArgument(
-    #     'namespace',
-    #     default_value='',
-    #     description='Namespace to use with nodes'
-    # )
     declare_ekf_params = DeclareLaunchArgument(
         'ekf_params',
         default_value=os.path.join(scout_mini_control_dir, 'params','ekf_params.yaml'),
@@ -76,6 +70,7 @@ def generate_launch_description():
         default_value='',
         description= 'RTABMap specific args to pass through (ex. --delete_db_on_start)'
     )
+
     # Robot Description File
     xacro_file = os.path.join(
         scout_mini_description_dir, 'models/scout_mini/xacro', 'scout_mini_tf.xacro')
@@ -87,7 +82,6 @@ def generate_launch_description():
     robot_description_param = {'robot_description': robot_description}
 
     # Navigation Launch
-
     slam_include = GroupAction(
         condition=LaunchConfigurationNotEquals('localization','true'),
         actions=[
@@ -116,7 +110,6 @@ def generate_launch_description():
                         'launch', 'rtabmap.launch.py',
                     ])]),
                 launch_arguments={
-                    # 'namespace': namespace,
                     'use_sim_time' : use_sim_time,
                     'rtabmap_args' : rtabmap_args,
                     'database_path' : database_path,
@@ -138,13 +131,10 @@ def generate_launch_description():
                 PythonLaunchDescriptionSource([
                     PathJoinSubstitution([
                         FindPackageShare('microstrain_inertial_driver'),
-                        'launch', 'microstrain_launch.py'])])),
-
-            # IncludeLaunchDescription(
-            #     PythonLaunchDescriptionSource([
-            #         PathJoinSubstitution([
-            #             FindPackageShare('scout_mini_control'),
-            #             'launch', 'navigation_bringup.launch.py'])]))
+                        'launch', 'microstrain_launch.py'])]),
+                launch_arguments={
+                    'activate' : 'true',
+                    'configure' : 'true'}.items())
             ]
         )
     
@@ -176,7 +166,6 @@ def generate_launch_description():
                         'launch', 'rtabmap.launch.py',
                     ])]),
                 launch_arguments={
-                    # 'namespace': namespace,
                     'use_sim_time' : use_sim_time,
                     'rtabmap_args' : rtabmap_args,
                     'database_path' : database_path,
@@ -198,13 +187,10 @@ def generate_launch_description():
                 PythonLaunchDescriptionSource([
                     PathJoinSubstitution([
                         FindPackageShare('microstrain_inertial_driver'),
-                        'launch', 'microstrain_launch.py'])])),
-
-            # IncludeLaunchDescription(
-            #     PythonLaunchDescriptionSource([
-            #         PathJoinSubstitution([
-            #             FindPackageShare('scout_mini_control'),
-            #             'launch', 'navigation_bringup.launch.py'])]))
+                        'launch', 'microstrain_launch.py'])]),
+                launch_arguments={
+                    'activate' : 'true',
+                    'configure' : 'true'}.items())
             ]
         )
 
@@ -212,7 +198,6 @@ def generate_launch_description():
     # Adding arguments
     ld.add_action(declare_ekf_params)
     ld.add_action(declare_rtabmap_args_cmd)
-    #ld.add_action(declare_namespace_cmd)
     ld.add_action(declare_localization_cmd)
     ld.add_action(declare_use_sim_time_cmd)
     ld.add_action(declare_database_path_cmd)
