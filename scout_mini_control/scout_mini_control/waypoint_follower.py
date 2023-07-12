@@ -11,6 +11,7 @@ from rclpy.node import Node
 import numpy as np
 
 import os
+import ast
 from ament_index_python.packages import get_package_share_directory
 
 from nav2_msgs.action import FollowWaypoints
@@ -24,29 +25,25 @@ class WaypointFollower(Node):
 
         scout_mini_control_dir = get_package_share_directory('scout_mini_control')
 
-        self.declare_parameters(
-            namespace='',
-            parameters=[
-                ('waypoints_file', os.path.join(scout_mini_control_dir, 'maps', 'waypoints.txt')),
-            ]
-        )
+        self.declare_parameter("waypoints_file", '/home/ros2/humble_ws/waypoints.txt')
+        self.declare_parameter("rth", True)
+        self.declare_parameter("home_point", [0.0,0.0,0.0,0.0,0.0,0.0,1.0])
+
+
+
         
         self.navigator = BasicNavigator()
 
 
-        self._action_follow_waypoints_client = ActionClient(
-            self, FollowWaypoints, '/follow_waypoints')
-
     def send_waypoints(self):
 
-        follow_waypoints_goal = FollowWaypoints.Goal()
         waypoints_file = self.get_parameter('waypoints_file').get_parameter_value().string_value
-        # self.goal_poses = []
+        rth = self.get_parameter('rth').get_parameter_value().bool_value
+        home_point = self.get_parameter('home_point').get_parameter_value().double_array_value
 
         waypoints = pd.read_csv(waypoints_file).to_numpy()
 
-        self.navigator.waitUntilNav2Active()
-        #waypoints = waypoints.values
+        #self.navigator.waitUntilNav2Active()
         pos_x = waypoints[:,0]
         pos_y = waypoints[:,1]
         pos_z = waypoints[:,2]
@@ -54,6 +51,10 @@ class WaypointFollower(Node):
         or_y = waypoints[:,4]
         or_z = waypoints[:,5]
         or_w = waypoints[:,6]
+        
+        # home_point = ast.literal_eval(home_point)
+        print(home_point)
+        print('The first value of the home array is: ' + str(home_point[0]))
 
         goal_poses = []
 
@@ -70,11 +71,25 @@ class WaypointFollower(Node):
             goal.pose.orientation.w = or_w[i]
             goal_poses.append(goal)
 
+        # Adding the home initial home point as the final point: 
+        if rth == True:
+            self.get_logger().info('RTH has been set as true: ' + str(home_point[2]) + '\n')
+            goal = PoseStamped()
+            goal.header.frame_id = 'map'
+            goal.header.stamp = self.get_clock().now().to_msg()
+            goal.pose.position.x = home_point[0]
+            goal.pose.position.y = home_point[1]
+            goal.pose.position.z = home_point[2]
+            goal.pose.orientation.x = home_point[3]
+            goal.pose.orientation.y = home_point[4]
+            goal.pose.orientation.z = home_point[5]
+            goal.pose.orientation.w = home_point[6]
+            goal_poses.append(goal)
+
         nav_start = self.navigator.get_clock().now()
         self.navigator.followWaypoints(goal_poses)
 
         i = 0
-
         while not self.navigator.isNavComplete():
             i = i + 1
             feedback = self.navigator.getFeedback()
@@ -84,7 +99,7 @@ class WaypointFollower(Node):
                 now = self.navigator.get_clock().now()
 
                 # Some navigation timeout to demo cancellation
-                if now - nav_start > Duration(seconds=250.0):
+                if now - nav_start > Duration(seconds=360.0):
                     self.navigator.cancelNav()
         
         result = self.navigator.getResult()
