@@ -44,7 +44,7 @@ class WaypointFollower(Node):
 
         
 
-        waypoints = pd.read_csv(waypoints_file).to_numpy()
+        waypoints = pd.read_csv(self.waypoints_file).to_numpy()
 
         #self.navigator.waitUntilNav2Active()
         pos_x = waypoints[:,0]
