@@ -16,7 +16,7 @@ from ament_index_python.packages import get_package_share_directory
 
 from nav2_msgs.action import FollowWaypoints
 from geometry_msgs.msg import PoseStamped
-from std_srvs.srv import Trigger
+from std_srvs.srv import SetBool
 
 from .include.robot_navigator import BasicNavigator,  NavigationResult
 
@@ -30,9 +30,15 @@ class WaypointFollower(Node):
         self.declare_parameter("rth", True)
         self.declare_parameter("home_point", [0.0,0.0,0.0,0.0,0.0,0.0,1.0])
 
+        timer_period = 0.1
+        self.i = 0
+        self.goal_poses = []
+        self.timer_flag = 0
+        self.triggered = 0
 
+        self._return_to_home_service = self.create_service(SetBool, 'return_to_home', self.return_to_home_callback)
 
-        self._return_to_home_service = self.create_service(Trigger, 'return_to_home', self.return_to_home_callback)
+        self.timer_ = self.create_timer(timer_period, self.timer_callback)
         self.navigator = BasicNavigator()
 
         self.waypoints_file = self.get_parameter('waypoints_file').get_parameter_value().string_value
@@ -41,8 +47,6 @@ class WaypointFollower(Node):
 
 
     def send_waypoints(self):
-
-        
 
         waypoints = pd.read_csv(self.waypoints_file).to_numpy()
 
@@ -57,7 +61,7 @@ class WaypointFollower(Node):
         
         # home_point = ast.literal_eval(home_point)
 
-        goal_poses = []
+        self.goal_poses = []
 
         for i in range(waypoints.shape[0]):
             goal = PoseStamped()
@@ -70,7 +74,7 @@ class WaypointFollower(Node):
             goal.pose.orientation.y = or_y[i]
             goal.pose.orientation.z = or_z[i]
             goal.pose.orientation.w = or_w[i]
-            goal_poses.append(goal)
+            self.goal_poses.append(goal)
 
         # Adding the home initial home point as the final point: 
         if self.rth == True:
@@ -85,59 +89,66 @@ class WaypointFollower(Node):
             goal.pose.orientation.y = self.home_point[4]
             goal.pose.orientation.z = self.home_point[5]
             goal.pose.orientation.w = self.home_point[6]
-            goal_poses.append(goal)
+            self.goal_poses.append(goal)
 
-        nav_start = self.navigator.get_clock().now()
-        self.navigator.followWaypoints(goal_poses)
+        self.nav_start = self.navigator.get_clock().now()
+        self.navigator.followWaypoints(self.goal_poses)
 
-        i = 0
-        while not self.navigator.isNavComplete():
-            i = i + 1
-            feedback = self.navigator.getFeedback()
-            if feedback and i % 5 == 0:
-                print('Executing current waypoint: ' +
-                    str(feedback.current_waypoint + 1) + '/' + str(len(goal_poses)))
-                now = self.navigator.get_clock().now()
-
-                # Some navigation timeout to demo cancellation
-                if now - nav_start > Duration(seconds=360.0):
-                    self.navigator.cancelNav()
-        
-        result = self.navigator.getResult()
-        if result == NavigationResult.SUCCEEDED:
-            print('Goal succeeded!')
-        elif result == NavigationResult.CANCELED:
-            print('Goal was canceled!')
-        elif result == NavigationResult.FAILED:
-            print('Goal failed!')
-        else:
-            print('Goal has an invalid return status!')
-        
-        exit(0)
+        self.timer_flag = 1
 
     def return_to_home_callback(self, request, response):
-        self.navigator.cancelNav()
-        self.get_logger().warn('Navigation Cancelled : Return to Home Triggered')
-        response.sucess = 1
-        response.message = 'Returning to home...'
-        goal_poses = []
-        goal = PoseStamped()
-        goal.header.frame_id = 'map'
-        goal.header.stamp = self.get_clock().now().to_msg()
-        goal.pose.position.x = self.home_point[0]
-        goal.pose.position.y = self.home_point[1]
-        goal.pose.position.z = self.home_point[2]
-        goal.pose.orientation.x = self.home_point[3]
-        goal.pose.orientation.y = self.home_point[4]
-        goal.pose.orientation.z = self.home_point[5]
-        goal.pose.orientation.w = self.home_point[6]
-        goal_poses.append(goal)
+        self.get_logger().info('Triggered')
 
-        self.navigator.followWaypoints(goal_poses)
+
+        # self.navigator.cancelNav()
+        # self.get_logger().warn('Navigation Cancelled : Return to Home Triggered')
+        response.sucess = 1
+        self.triggered = 1
+        # response.message = 'Returning to home...'
+        # goal_poses = []
+        # goal = PoseStamped()
+        # goal.header.frame_id = 'map'
+        # goal.header.stamp = self.get_clock().now().to_msg()
+        # goal.pose.position.x = self.home_point[0]
+        # goal.pose.position.y = self.home_point[1]
+        # goal.pose.position.z = self.home_point[2]
+        # goal.pose.orientation.x = self.home_point[3]
+        # goal.pose.orientation.y = self.home_point[4]
+        # goal.pose.orientation.z = self.home_point[5]
+        # goal.pose.orientation.w = self.home_point[6]
+        # goal_poses.append(goal)
+
+        # self.navigator.followWaypoints(goal_poses)
 
         return response
 
+    def timer_callback(self):
+        if self.timer_flag == 1:
+            if self.triggered == 1:
+                self.get_logger().info('The service was triggered')
+            if self.navigator.isNavComplete() == False:
 
+                self.i = self.i + 1
+                feedback = self.navigator.getFeedback()
+                if feedback and self.i % 5 == 0:
+                    self.get_logger().info('Executing current waypoint: ' +
+                                        str(feedback.current_waypoint + 1) + '/' + str(len(self.goal_poses)))
+                    now = self.navigator.get_clock().now()
+                    if now - self.nav_start  > Duration(seconds=350.0):
+                        self.navigator.cancelNav()
+            result = self.navigator.getResult()
+
+            if self.navigator.isNavComplete == True:
+                self.get_logger().info('Got to this point')
+                if result == NavigationResult.SUCCEEDED:
+                    self.get_logger().info('Goal succeeded!')
+                elif result == NavigationResult.CANCELED:
+                    self.get_logger().warn('Goal was cancelled.')
+                elif result == NavigationResult.FAILED:
+                    self.get_logger().error('Goal failed!')
+                else:
+                    self.get_logger().warn('Goal has an invalid return status.')
+                exit(0)
 
 def main():
     rclpy.init()

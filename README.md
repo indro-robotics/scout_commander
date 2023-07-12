@@ -74,7 +74,7 @@ To launch the robot in a `mapping` mode in order to create a map of the environm
 Launching the robot into mapping mode can be done using the command below:
 
 ```
-ros2 launch scout_mini_control scout_bringup.launch.py rtabmap_args:=--delete_db_on_start database_file:=/home/indro/colcon_ws/src/scout_commander/scout_mini_control/maps/map.db
+ros2 launch scout_mini_control scout_bringup.launch.py rtabmap_args:=--delete_db_on_start database_path:=/home/indro/colcon_ws/src/scout_commander/scout_mini_control/maps/map.db
 ```
 
 This will launch the robot in a mapping mode. You can now manually drive the robot around it's environment to create a map. 
@@ -92,7 +92,7 @@ If you have already created the map above, or have another database map of your 
 
 Launching the robot into localization mode can be done using the command below:
 ```
-ros2 launch scout_mini_control scout_bringup.launch.py localization:=true database_file:=/home/indro/colcon_ws/src/scout_commander/scout_mini_control/maps/map.db
+ros2 launch scout_mini_control scout_bringup.launch.py localization:=true database_path:=/home/indro/colcon_ws/src/scout_commander/scout_mini_control/maps/map.db
 ```
 # Launching the NAV2 System
 Once you have launched the robot's bringup file, it will be publishing to the `RobotModel`, `TF`, `odom`, and `map` frames, as well as some other `rtabmap` and sensor topics. To begin using the Navigation system, for path planning, object detection, and future automony, you will launch the navigation stack using the `navigation_bringup` launch file. No arguments need to be passed into this node.

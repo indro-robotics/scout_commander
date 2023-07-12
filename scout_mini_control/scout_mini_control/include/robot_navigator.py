@@ -188,7 +188,7 @@ class BasicNavigator(Node):
         elif self.status == GoalStatus.STATUS_CANCELED:
             return NavigationResult.CANCELED
         else:
-            return NavigationResult.UNKNOWN
+            return NavigationResult.UKNOWN
 
     def waitUntilNav2Active(self):
         self._waitForNodeToActivate('bt_navigator')
