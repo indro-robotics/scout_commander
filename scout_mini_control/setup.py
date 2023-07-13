@@ -41,6 +41,7 @@ setup(
         'console_scripts': [
             'scout_mini_control = scout_mini_control.scout_mini_control:main',
             'waypoint_follower = scout_mini_control.waypoint_follower:main',
+            'return_to_home = scout_mini_control.include.return_to_home:main',
         ],
     },
 )
