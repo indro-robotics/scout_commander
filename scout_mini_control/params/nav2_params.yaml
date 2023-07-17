@@ -400,7 +400,7 @@ global_costmap:
       update_frequency: 3.5
       publish_frequency: 2.0
       global_frame: map
-      map_topic: /scout_mini/rtabmap/grid_prob_map
+      map_topic: /scout_mini/rtabmap/map
       robot_base_frame: base_footprint
       use_sim_time: False
       footprint: "[ [0.325, 0.375], [0.325, -0.375], [-0.325,-0.375], [-0.325,0.375] ]"
