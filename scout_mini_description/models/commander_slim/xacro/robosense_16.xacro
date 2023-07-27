@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<robot name="robosense_16" xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <xacro:macro name="robosense_16">
+        <link name="robosense_link">
+            <inertial>
+                <mass value="0.87" />
+                <origin xyz="0 0 0" />
+                <inertia ixx="0.001094695" ixy="0" ixz="0"
+                    iyy="0.001094695" iyz="0"
+                    izz="0.001245079" />
+            </inertial>
+            <visual>
+                <origin rpy="-1.5707 0 0" xyz="0 0 0" />
+                <geometry>
+                    <mesh
+                        filename="package://scout_mini_description/models/commander_slim/meshes/robosense_16.dae" />
+                </geometry>
+            </visual>
+            <collision>
+                <origin rpy="0 0 0" xyz="0 0 0" />
+                <geometry>
+                    <cylinder radius="0.0535" length="0.0817" />
+                </geometry>
+            </collision>
+        </link>
+        <joint name="robosense_joint" type="fixed">
+            <origin xyz="0.0 0.0 0.2" rpy="0.0 0.0 0.0" />
+            <parent link="commander_slim_link" />
+            <child link="robosense_link" />
+        </joint>
+    </xacro:macro>
+</robot>

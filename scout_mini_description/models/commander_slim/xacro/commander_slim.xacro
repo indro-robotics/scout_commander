@@ -1,5 +1,7 @@
 <?xml version="1.0"?>
 <robot name="commander_slim" xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <xacro:include
+        filename="$(find scout_mini_description)/models/commander_slim/xacro/robosense_16.xacro" />
     <link name="commander_slim_link">
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
@@ -39,4 +41,5 @@
         <parent link="commander_slim_link" />
         <child link="sensor_wgs84" />
     </joint>
+    <xacro:robosense_16 />
 </robot>
