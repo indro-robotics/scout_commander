@@ -67,6 +67,6 @@ def generate_launch_description():
     ld.add_action(declare_home_point_cmd)
 
     ld.add_action(waypoint_follower)
-    ld.add_action(return_to_home)
+    # ld.add_action(return_to_home)
 
     return ld

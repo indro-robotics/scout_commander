@@ -9,6 +9,8 @@ from ament_index_python.packages import get_package_share_directory
 
 from geometry_msgs.msg import PoseStamped
 
+from std_msgs.msg import Bool
+
 from .include.robot_navigator import BasicNavigator,  NavigationResult
 
 class WaypointFollower(Node):
@@ -37,6 +39,17 @@ class WaypointFollower(Node):
         # Call the waypoint sender
         self.send_waypoints()
 
+        # Declaring Variables
+        self.return_to_home_poses = []
+
+        # Creating ROS Services
+        self.subscription = self.create_subscription(
+            Bool,
+            'return_to_home',
+            self.return_to_home_callback,
+            10
+        )
+
 
     def send_waypoints(self):
         
@@ -50,7 +63,6 @@ class WaypointFollower(Node):
         or_y = waypoints[:,4]
         or_z = waypoints[:,5]
         or_w = waypoints[:,6]
-        self.goal_poses = []
 
         for i in range(waypoints.shape[0]):
             goal = PoseStamped()
@@ -84,12 +96,34 @@ class WaypointFollower(Node):
 
         self.timer_flag = 1
 
-    def timer_callback(self):
-        if self.timer_flag == 1:
-            if self.triggered == 1:
-                self.get_logger().info('The service was triggered')
-            if self.navigator.isNavComplete() == False:
+    def return_to_home_callback(self, msg):
+        if msg.data == True:
+            self.get_logger().warn('Return to home triggered')
+            self.triggered = 1
 
+            self.navigator.cancelNav()
+            self.get_logger().warn('Navigation goal cancelled...')
+
+            # Populate the home point array
+            goal = PoseStamped()
+            goal.header.frame_id = 'map'
+            goal.header.stamp = self.get_clock().now().to_msg()
+            goal.pose.position.x = self.home_point[0]
+            goal.pose.position.y = self.home_point[1]
+            goal.pose.position.z = self.home_point[2]
+            goal.pose.orientation.x = self.home_point[3]
+            goal.pose.orientation.y = self.home_point[4]
+            goal.pose.orientation.z = self.home_point[5]
+            goal.pose.orientation.w = self.home_point[6]
+            self.return_to_home_poses.append(goal)
+
+            self.navigator.followWaypoints(self.return_to_home_poses)
+            self.get_logger().warn('Returning to home...')
+
+    def timer_callback(self):
+        if self.timer_flag == 1 and self.triggered != 1:
+            if self.navigator.isNavComplete() == False:
+                self.get_logger().info('Not triggered')
                 self.i = self.i + 1
                 feedback = self.navigator.getFeedback()
                 if feedback and self.i % 5 == 0:
@@ -108,6 +142,28 @@ class WaypointFollower(Node):
                     self.get_logger().warn('Goal was cancelled.')
                 elif result == NavigationResult.FAILED:
                     self.get_logger().error('Goal failed!')
+                else:
+                    self.get_logger().warn('Goal has an invalid return status.')
+                exit(0)
+        if self.timer_flag == 1 and self.triggered == 1:
+            if self.navigator.isNavComplete() == False:
+
+                self.i = self.i + 1
+                feedback = self.navigator.getFeedback()
+                if feedback and self.i % 5 == 0:
+                    self.get_logger().info('Returning to home..')
+                    now = self.navigator.get_clock().now()
+                    if now - self.nav_start  > Duration(seconds=350.0):
+                        self.navigator.cancelNav()
+            result = self.navigator.getResult()
+
+            if self.navigator.isNavComplete == True:
+                if result == NavigationResult.SUCCEEDED:
+                    self.get_logger().info('Sucessfully returned to home!')
+                elif result == NavigationResult.CANCELED:
+                    self.get_logger().warn('Return to home was cancelled.')
+                elif result == NavigationResult.FAILED:
+                    self.get_logger().error('Return to home failed!')
                 else:
                     self.get_logger().warn('Goal has an invalid return status.')
                 exit(0)
